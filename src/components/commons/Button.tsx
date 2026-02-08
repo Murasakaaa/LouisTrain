@@ -4,13 +4,15 @@ export default function Button({
   text,
   onClick,
   style,
+  id,
 }: {
   text: string;
   onClick: () => void;
   style: {};
+  id?: string;
 }) {
   return (
-    <button className="button" style={style} onClick={onClick}>
+    <button id={id} className="button" style={style} onClick={onClick}>
       {text}
     </button>
   );

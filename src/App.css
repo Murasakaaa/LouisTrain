@@ -1,8 +1,30 @@
 :root {
+
+  /* COLORS */
+
   --white: white;
   --black: black;
   --main-green: #1ca94d;
+
+  /* FONT SIZES */
+  --home-page-h2: clamp(1.5rem, 2vw, 2rem);
+  --home-page-h1: clamp(2.5rem, 4.5vw, 5rem);
+  --home-page-filters: clamp(0.8rem, 0.9vw, 2rem);
 }
+
+/* FONT IMPORTS */
+
+@font-face {
+  font-family: "DM Sans";
+  src: url("../public/fonts/dm-sans/DMSans-VariableFont_normal.ttf");
+}
+
+@font-face {
+  font-family: "Inter";
+  src: url("../public/fonts/inter/Inter-VariableFont.ttf");
+}
+
+/* GOBAL STYLES */
 
 * {
   margin: 0;

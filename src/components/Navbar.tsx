@@ -5,9 +5,11 @@ import "../style/components/Navbar.css";
 export default function Navbar({
   isConnected,
   userName,
+  isWhite
 }: {
   isConnected: boolean;
   userName: string;
+  isWhite: boolean;
 }) {
   const buttonConnexion = (
     <Button text="Se connecter" onClick={() => console.log("Se connecter")} />
@@ -21,7 +23,7 @@ export default function Navbar({
 
   return (
     <div className="navbar">
-      <h1 className="logo">
+      <h1 className="logo" style={{ color: isWhite ? "var(--white)" : "var(--black)" }}>
         Louis<span>Train</span>
       </h1>
       {isConnected ? profil : buttonConnexion}
