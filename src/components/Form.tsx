@@ -1,6 +1,7 @@
 import React from "react";
 import "../style/components/Form.css";
 import Input, { DropDown } from "./commons/Input";
+import Button from "./commons/Button";
 
 export default function Form({ title }: { title: string }) {
   const options = [
@@ -10,12 +11,16 @@ export default function Form({ title }: { title: string }) {
     "Je ne souhaite pas me prononcer",
     "Autres",
   ];
+
+  const handleSubmitForm = () => {
+    console.log("Submit form");
+  };
   return (
     <div className="form-container">
       <h3>{title}</h3>
       <form action="" className="form">
         <DropDown options={options} name="civility" />
-        <div>
+        <div className="names">
           <Input
             type="text"
             name="lastname"
@@ -42,6 +47,11 @@ export default function Form({ title }: { title: string }) {
           name="card_number"
           placeholder="N°Carte d'abonnement"
           darkInput={false}
+        />
+        <Button
+          text="Ajouter le client"
+          style={{ width: "100%", borderRadius: "6px" }}
+          onClick={handleSubmitForm}
         />
       </form>
     </div>

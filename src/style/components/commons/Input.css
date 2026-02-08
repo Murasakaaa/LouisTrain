@@ -3,7 +3,7 @@
 .dropdown {
   width: 100%;
   padding: 0.5rem;
-  border-radius: 10px;
+  border-radius: 6px;
 }
 
 .light-input,
@@ -14,5 +14,9 @@
 
 .dark-input {
   background-color: #262626;
-  color: var(--primary-color);
+  color: var(--white);
+}
+
+.dropdown {
+  border: none;
 }

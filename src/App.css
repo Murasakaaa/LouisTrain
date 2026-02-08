@@ -1,7 +1,7 @@
 :root {
-  --primary-color: white;
-  --secondary-color: black;
-  --thirty-color: #1ca94d;
+  --white: white;
+  --black: black;
+  --main-green: #1ca94d;
 }
 
 * {

@@ -4,7 +4,23 @@
   border-radius: 20px;
   height: fit-content;
   padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
 }
 
 .form-container .form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  align-items: center;
+}
+
+.form-container .form .names {
+  display: flex;
+  gap: 10px;
+}
+
+.form-container .form p {
+  color: #bdbcbc;
 }

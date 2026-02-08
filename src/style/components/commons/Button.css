@@ -1,13 +1,13 @@
 .button {
-  background-color: var(--thirty-color);
+  background-color: var(--main-green);
   padding: 10px;
   border-radius: 100px;
-  border: solid 1px var(--thirty-color);
-  color: var(--primary-color);
+  border: solid 1px var(--main-green);
+  color: var(--white);
   font-weight: bold;
 }
 
 .button:hover {
   background-color: transparent;
-  color: var(--thirty-color);
+  color: var(--main-green);
 }
