@@ -7,7 +7,6 @@ import Input from "../components/commons/Input";
 import { ArrowLeftRight  } from 'lucide-react';
 
 export default function HomePage() {
-  const searchButtonId = new String("recherche-train");
   return (
     <div className="home-page-container">
       <img src={homePageImage} alt="une image de fond" id="home-page-bg" />
