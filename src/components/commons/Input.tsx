@@ -26,12 +26,17 @@ export default function Input({
 export const DropDown = ({
   options,
   name,
+  defaultValue,
 }: {
   options: string[];
   name: string;
+  defaultValue: string;
 }) => {
   return (
     <select name={name} id={name} className="dropdown">
+      <option value="" disabled selected>
+        {defaultValue}
+      </option>
       {options.map((option, index) => (
         <option key={index} value={option.toLocaleLowerCase()}>
           {option}

@@ -1,11 +1,9 @@
-import React from "react";
 import "../style/components/Form.css";
 import Input, { DropDown } from "./commons/Input";
 import Button from "./commons/Button";
 
 export default function Form({ title }: { title: string }) {
   const options = [
-    "Civilité",
     "Homme",
     "Femme",
     "Je ne souhaite pas me prononcer",
@@ -19,7 +17,7 @@ export default function Form({ title }: { title: string }) {
     <div className="form-container">
       <h3>{title}</h3>
       <form action="" className="form">
-        <DropDown options={options} name="civility" />
+        <DropDown defaultValue="Civilité" options={options} name="civility" />
         <div className="names">
           <Input
             type="text"
