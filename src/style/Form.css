@@ -1,0 +1,10 @@
+.form-container {
+  width: 30%;
+  border: 1px solid #c9c9c9;
+  border-radius: 20px;
+  height: fit-content;
+  padding: 20px;
+}
+
+.form-container .form {
+}
