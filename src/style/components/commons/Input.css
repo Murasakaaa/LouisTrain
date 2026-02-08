@@ -9,7 +9,7 @@
 .light-input,
 .dropdown {
   background-color: #f2f2f2;
-  color: var(--secondary-color);
+  color: var(--black);
 }
 
 .dark-input {
