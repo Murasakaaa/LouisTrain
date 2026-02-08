@@ -1,5 +1,5 @@
 import React from "react";
-import "../style/Form.css";
+import "../style/components/Form.css";
 import Input, { DropDown } from "./commons/Input";
 
 export default function Form({ title }: { title: string }) {
@@ -16,16 +16,32 @@ export default function Form({ title }: { title: string }) {
       <form action="" className="form">
         <DropDown options={options} name="civility" />
         <div>
-          <Input type="text" name="lastname" placeholder="Nom" />
-          <Input type="text" name="firstname" placeholder="Prénom" />
+          <Input
+            type="text"
+            name="lastname"
+            placeholder="Nom"
+            darkInput={false}
+          />
+          <Input
+            type="text"
+            name="firstname"
+            placeholder="Prénom"
+            darkInput={false}
+          />
         </div>
-        <Input type="text" name="phone" placeholder="Téléphone" />
+        <Input
+          type="text"
+          name="phone"
+          placeholder="Téléphone"
+          darkInput={false}
+        />
         <p>Ou</p>
-        <Input type="text" name="email" placeholder="Mail" />
+        <Input type="text" name="email" placeholder="Mail" darkInput={false} />
         <Input
           type="text"
           name="card_number"
           placeholder="N°Carte d'abonnement"
+          darkInput={false}
         />
       </form>
     </div>

@@ -1,5 +1,5 @@
 import React from "react";
-import "../style/Tableau.css";
+import "../style/components/Tableau.css";
 import { Trash2 } from "lucide-react";
 
 type DataRow = Record<string, string | number>;

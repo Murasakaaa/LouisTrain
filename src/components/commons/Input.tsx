@@ -1,5 +1,5 @@
 import React from "react";
-import "../../style/Input.css";
+import "../../style/components/commons/Input.css";
 
 export default function Input({
   type,

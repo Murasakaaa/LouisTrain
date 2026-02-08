@@ -30,3 +30,8 @@ a {
 ul {
   list-style: none;
 }
+
+input {
+  border: none;
+  background-color: transparent;
+}

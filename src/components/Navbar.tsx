@@ -1,6 +1,6 @@
 import React from "react";
 import Button from "./commons/Button";
-import "../style/Navbar.css";
+import "../style/components/Navbar.css";
 
 export default function Navbar({
   isConnected,
