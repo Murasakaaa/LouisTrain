@@ -9,8 +9,8 @@ function App() {
   return (
     <main style={{ display: "flex", flexDirection: "column", height: "100vh" }}>
       <Navbar isConnected={false} userName="Louis Tran" isWhite={true} />
-      {/* <Admin /> */}
-      <HomePage />
+      <Admin />
+      {/* <HomePage /> */}
     </main>
   );
 }
