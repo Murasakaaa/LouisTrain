@@ -1,3 +1,4 @@
-Truc a installer
+# Trucs déjà installés : 
 
-npm install lucide-react
+* lucide-react (pour les icones)
+* mongoose (pour la BDD)
