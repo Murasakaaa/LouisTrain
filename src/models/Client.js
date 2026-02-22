@@ -59,6 +59,6 @@ const clientSchema = new mongoose.Schema({
 });
 
 // Création du modèle
-const Client = mongoose.model('Client', clientSchema, "clients");
+const Client = mongoose.models.Client || mongoose.model('Client', clientSchema, "clients");
 
 export default Client;
