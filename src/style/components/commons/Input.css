@@ -1,0 +1,22 @@
+.light-input,
+.dark-input,
+.dropdown {
+  width: 100%;
+  padding: 0.5rem;
+  border-radius: 6px;
+}
+
+.light-input,
+.dropdown {
+  background-color: #f2f2f2;
+  color: var(--black);
+}
+
+.dark-input {
+  background-color: #262626;
+  color: var(--white);
+}
+
+.dropdown {
+  border: none;
+}

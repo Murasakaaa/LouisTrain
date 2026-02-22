@@ -1,42 +1,57 @@
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  /* COLORS */
+  --white: white;
+  --black: black;
+  --main-green: #1ca94d;
+
+  /* FONT SIZES */
+  --home-page-h2: clamp(1.5rem, 2vw, 2rem);
+  --home-page-h1: clamp(2.5rem, 4.5vw, 5rem);
+  --home-page-filters: clamp(0.8rem, 0.9vw, 2rem);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+/* FONT IMPORTS */
+
+@font-face {
+  font-family: "DM Sans";
+  src: url("/fonts/dm-sans/DMSans-VariableFont_normal.ttf");
 }
 
-html,
-body {
-  max-width: 100vw;
-  overflow-x: hidden;
+@font-face {
+  font-family: "Inter";
+  src: url("/fonts/inter/Inter-VariableFont.ttf");
 }
 
-body {
-  color: var(--foreground);
-  background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
+/* GOBAL STYLES */
 
 * {
-  box-sizing: border-box;
-  padding: 0;
   margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  transition: all 0.3s ease;
+}
+
+body {
+  font-family: "Inter", sans-serif;
+  overflow: hidden;
+}
+
+button {
+  border: none;
+  background-color: transparent;
+  cursor: pointer;
 }
 
 a {
-  color: inherit;
   text-decoration: none;
+  color: inherit;
 }
 
-@media (prefers-color-scheme: dark) {
-  html {
-    color-scheme: dark;
-  }
+ul {
+  list-style: none;
+}
+
+input {
+  border: none;
+  background-color: transparent;
 }

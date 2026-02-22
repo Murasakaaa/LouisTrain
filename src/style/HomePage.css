@@ -1,0 +1,143 @@
+.home-page-container {
+  width: 100%;
+  flex: 1;
+  display: flex;
+  align-items: end;
+}
+.home-page-center {
+  min-height: 80vh;
+  min-width: 70%;
+  display: flex;
+  flex-direction: column;
+  gap: 10vh;
+  padding-left: 5%;
+}
+#home-page-bg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  z-index: -2;
+}
+.home-page-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: linear-gradient(
+    to right,
+    rgba(0, 0, 0, 0.857) 0%,
+    rgba(0, 0, 0, 0.6) 25%,
+    rgba(0, 0, 0, 0.55) 50%,
+    rgba(0, 0, 0, 0.3) 70%,
+    rgba(0, 0, 0, 0) 100%
+  );
+}
+.home-page-top-text {
+  display: flex;
+  flex-direction: column;
+  align-items: start;
+  justify-content: space-evenly;
+  gap: 1em;
+}
+.home-page-top-text h1 {
+  font:
+    700 var(--home-page-h1) "DM Sans",
+    sans-serif;
+  font-style: normal;
+  color: var(--white);
+  line-height: 1em;
+}
+.home-page-top-text h2 {
+  font:
+    400 var(--home-page-h2) "DM Sans",
+    sans-serif;
+  font-style: normal;
+  color: var(--white);
+}
+.home-page-top-text strong {
+  color: var(--main-green);
+}
+
+/* FILTERS */
+
+.home-page-filters form {
+  width: 65%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2em;
+  background-color: rgba(255, 255, 255, 0.22);
+  border-radius: 1.5em;
+  padding: 2em 0.5em;
+}
+.depart-arrivee {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  gap: 0.3em;
+  width: 90%;
+}
+.aller-retour {
+  display: flex;
+  justify-content: center;
+  gap: 0.3em;
+  width: 90%;
+}
+#depart,
+#arrivee,
+#aller,
+#retour {
+  padding: 1em;
+  font:
+    600 var(--home-page-filters) "Inter",
+    sans-serif;
+}
+#depart,
+#aller {
+  border-top-left-radius: 1em;
+  border-bottom-left-radius: 1em;
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+}
+#arrivee,
+#retour {
+  border-top-right-radius: 1em;
+  border-bottom-right-radius: 1em;
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+  padding-left: 2em;
+}
+#retour {
+  color: var(--main-green);
+  font: bold;
+}
+.icon {
+  width: 2.9em;
+  height: 2.9em;
+  background-color: var(--black);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translateY(-50%) translateX(-50%);
+}
+#LeftRightArrow {
+  display: inline-block;
+  width: 40px;
+  height: 40px;
+  color: var(--white);
+}
+
+#recherche-train {
+  width: 90%;
+  padding: 1em;
+  font:
+    500 var(--home-page-filters) "Inter",
+    sans-serif;
+}

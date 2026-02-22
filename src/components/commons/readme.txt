@@ -1,0 +1,1 @@
+ici c les composants commun genre bouton, input, text etc
