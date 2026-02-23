@@ -24,3 +24,18 @@
 .form-container .form p {
   color: #bdbcbc;
 }
+
+/* radio-button */
+.radio-buttons {
+  width: 100%;
+}
+
+.radio-buttons div {
+  margin-top: 10px;
+  display: flex;
+  gap: 2rem;
+}
+.radio-buttons div label {
+  display: flex;
+  gap: 5px;
+}

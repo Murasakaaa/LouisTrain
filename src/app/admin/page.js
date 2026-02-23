@@ -1,41 +1,18 @@
-import React from "react";
+"use client";
+import { useState, useEffect } from "react";
+
 import Tableau from "../../components/Tableau";
 import Form from "../../components/Form";
 import "../../style/Admin.css";
 
 export default function Admin() {
-  const data = [
-    {
-      "Nom du client": "Louis Tran",
-      Civilite: "Monsieur",
-      "Téléphone/Mail": "louis.tran@gmail.com",
-      "N°Carte d’abonnement": "01569",
-    },
-    {
-      "Nom du client": "Louis Tran",
-      Civilite: "Monsieur",
-      "Téléphone/Mail": "louis.tran@gmail.com",
-      "N°Carte d’abonnement": "01569",
-    },
-    {
-      "Nom du client": "Louis Tran",
-      Civilite: "Monsieur",
-      "Téléphone/Mail": "louis.tran@gmail.com",
-      "N°Carte d’abonnement": "01569",
-    },
-    {
-      "Nom du client": "Louis Tran",
-      Civilite: "Monsieur",
-      "Téléphone/Mail": "louis.tran@gmail.com",
-      "N°Carte d’abonnement": "01569",
-    },
-    {
-      "Nom du client": "Louis Tran",
-      Civilite: "Monsieur",
-      "Téléphone/Mail": "louis.tran@gmail.com",
-      "N°Carte d’abonnement": "01569",
-    },
-  ]; // A remplacer par la requête mongoDb
+  const [clients, setClients] = useState([]);
+
+  useEffect(() => {
+    fetch("/api/client")
+      .then((res) => res.json())
+      .then((data) => setClients(data));
+  }, []);
 
   return (
     <div className="admin-container">
@@ -47,8 +24,8 @@ export default function Admin() {
           gap: "1rem",
         }}
       >
-        <Tableau title="Liste des clients" data={data} />
-        <Form title="Ajout de client" />
+        <Tableau title="Liste des abonnés" data={clients} />
+        <Form title="Ajout d'abonné" />
       </div>
     </div>
   );

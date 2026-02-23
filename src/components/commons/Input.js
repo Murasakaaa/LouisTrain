@@ -1,14 +1,13 @@
 import React from "react";
 import "../../style/components/commons/Input.css";
 
-export default function Input({ type, name, placeholder, darkInput }) {
+export default function Input({ darkInput = false, ...props }) {
   return (
     <input
-      type={type}
-      name={name}
-      id={name}
-      placeholder={placeholder}
-      className={darkInput ? "dark-input" : "light-input"}
+      {...props}
+      className={
+        props.type === "radio" ? "" : darkInput ? "dark-input" : "light-input"
+      }
     />
   );
 }

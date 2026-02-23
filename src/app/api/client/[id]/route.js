@@ -8,3 +8,18 @@ export async function GET(request, { params }) {
   const client = await Client.findById(id);
   return NextResponse.json(client);
 }
+
+export async function DELETE(request, { params }) {
+  try {
+    await connectDB();
+
+    await Client.findByIdAndDelete(params.id);
+
+    return NextResponse.json({ message: "Client supprimé" }, { status: 200 });
+  } catch (error) {
+    return NextResponse.json(
+      { message: "Erreur lors de la suppression", error },
+      { status: 500 },
+    );
+  }
+}

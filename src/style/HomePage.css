@@ -114,8 +114,8 @@
   font: bold;
 }
 .icon {
-  width: 2.9em;
-  height: 2.9em;
+  width: 2.5em;
+  height: 2.5em;
   background-color: var(--black);
   border-radius: 50%;
   display: flex;
@@ -128,7 +128,6 @@
   transform: translateY(-50%) translateX(-50%);
 }
 #LeftRightArrow {
-  display: inline-block;
   width: 40px;
   height: 40px;
   color: var(--white);
@@ -145,7 +144,7 @@
 .departs_info {
   padding: 0.5em 1em;
   border-radius: 1.5rem;
-  background-color: rgba(255, 255, 255, 0.10);
+  background-color: rgba(255, 255, 255, 0.1);
   display: flex;
   flex-direction: column;
   align-items: center;

@@ -3,8 +3,13 @@ import "../style/components/Tableau.css";
 import { Trash2 } from "lucide-react";
 
 export default function Tableau({ title, data }) {
-  if (data.length === 0) return <p>Aucune donnée</p>;
-  const headers = Object.keys(data[0]);
+  const headers = [
+    "Nom du client",
+    "Civilite",
+    "Téléphone/Mail",
+    "N°Carte d’abonnement",
+    "Action",
+  ];
 
   return (
     <div className="table-container">
@@ -19,30 +24,33 @@ export default function Tableau({ title, data }) {
             {headers.map((header) => (
               <th key={header}>{header}</th>
             ))}
-            <th>Action</th>
           </tr>
         </thead>
 
         {/* Table body */}
-        <tbody className="table-body">
-          {data.map((row, index) => (
-            <TableRow key={index} headers={headers} row={row} />
-          ))}
-        </tbody>
+        {data.length !== 0 && (
+          <tbody className="table-body">
+            {data.map((row, index) => (
+              <TableRow key={index} client={row} />
+            ))}
+          </tbody>
+        )}
       </table>
     </div>
   );
 }
 
-const TableRow = ({ headers, row }) => {
+const TableRow = ({ client }) => {
   const handleDeleteRow = () => {
     console.log("Delete row");
   };
   return (
     <tr className="table-row">
-      {headers.map((header) => (
-        <td key={header}>{row[header]}</td>
-      ))}
+      <td>{client.nom + " " + client.prenom}</td>
+      <td>{client.civilite}</td>
+      <td>{client.telephone ?? client.email}</td>
+      <td>{client.abonnement.num_carte}</td>
+
       <td>
         <button onClick={handleDeleteRow}>
           <Trash2 size={"15px"} color="#383838" />
