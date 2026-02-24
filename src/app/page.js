@@ -65,9 +65,8 @@ export default function HomePage() {
               </div>
               <div className="aller-retour">
                 <Input
-                  type="text"
-                  name="aller"
-                  placeholder="Aller :"
+                  type="date"
+                  name="date"
                   darkInput={true}
                 />
                 <Input

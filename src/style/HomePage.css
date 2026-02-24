@@ -133,8 +133,7 @@
   color: var(--white);
 }
 
-#recherche-train,
-#tous-trains {
+#recherche-train {
   width: 90%;
   padding: 1em;
   font:

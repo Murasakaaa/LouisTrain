@@ -1,0 +1,150 @@
+.calendar_container {
+  width: 100%;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3rem;
+}
+
+.filter_container {
+  width: 75%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 0.5rem;
+}
+
+.title {
+  width: 100%;
+  background-image: url("/images/calendar-image.jpg");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+
+  min-height: 400px;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+
+  border-radius: 40px;
+  padding-top: 5rem;
+
+  position: relative;
+  overflow: hidden;
+}
+
+.title h1 {
+  font:
+    700 var(--home-page-h1) "DM Sans",
+    sans-serif;
+  font-style: normal;
+  color: var(--white);
+  color: var(--white);
+  text-shadow: 2px 2px 10rem rgba(0, 0, 0, 0.5);
+  margin: 0;
+  font-size: var(--home-page-h1);
+  text-align: center;
+}
+
+.filters {
+  width: 85%;
+  background-color: var(--black);
+  color: var(--white);
+  padding: 1.5rem 0;
+  border-radius: 20px;
+
+  /* C'est cette ligne qui fait remonter la div sur l'image */
+  margin-top: -150px;
+
+  /* pour que la div passe "au-dessus" de l'image */
+  position: relative;
+  z-index: 10;
+
+  /* Une belle ombre portée pour donner un effet de profondeur (carte flottante) */
+  box-shadow: 0px 10px 30px rgba(0, 0, 0, 0.15);
+}
+
+.filters form {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+.aller-retour-calendar {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  width: 90%;
+  align-items: flex-start;
+}
+
+.date-group {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  width: 100%;
+}
+
+.input-with-label {
+  display: flex;
+  flex-direction: column;
+  gap: 8px; /* Espace entre le texte et l'input */
+  width: 100%;
+}
+.input-with-label label {
+  color: var(--white); /* ou une autre couleur selon ton thème */
+  font-size: 0.9rem;
+  font-weight: 500;
+  font-family: "Inter", sans-serif;
+  margin-left: 5px; /* Petit décalage pour l'aligner avec le texte interne de l'input */
+}
+
+.checkbox-container {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: var(--white);
+  margin-top: 25px; /* On pousse la checkbox vers le bas pour compenser la hauteur du label d'à côté */
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.checkbox-container input {
+  width: 1.2rem;
+  height: 1.2rem;
+  cursor: pointer;
+}
+
+/* Petite animation quand l'input apparaît */
+.return-input-animate {
+  animation: fadeIn 0.3s ease-in-out;
+  width: 100%;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+.all_trains_container {
+  width: 75%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.all_trains_container h2 {
+  font-family: "DM Sans", sans-serif;
+  font-weight: 700;
+  color: var(--black);
+  margin-bottom: 2rem;
+  font-size: 2rem;
+}
