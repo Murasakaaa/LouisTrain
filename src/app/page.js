@@ -1,27 +1,38 @@
 "use client";
 import React, { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
 import "../style/HomePage.css";
 import Button from "../components/commons/Button";
 import Input from "../components/commons/Input";
-import { ArrowLeftRight, ArrowDown } from "lucide-react";
+import { ArrowLeftRight } from "lucide-react";
 
 export default function HomePage() {
-  const [departs, setDeparts] = useState([]);
+  const router = useRouter();
 
-  useEffect(() => {
-    fetch("/api/departs") // le fetch va appeler le fichier route.js qui est dans le dossier /api/departs
-      .then((res) => res.json())
-      .then((data) => setDeparts(data));
-  }, []);
+  // Fonctions de redirection
+  const handleSearchWithFilters = (e) => {
+    e.preventDefault();
+    // On récupère les valeurs via FormData pour faire simple
+    const formData = new FormData(e.currentTarget);
+    const depart = formData.get("depart");
+    const arrivee = formData.get("arrivee");
+    const aller = formData.get("aller");
+
+    // Redirection avec paramètres (ex: /calendrier?depart=Paris&arrivee=Lyon)
+    router.push(
+      `/calendrier?depart=${depart}&arrivee=${arrivee}&date=${aller}`,
+    );
+  };
+
+  const handleSeeAllTrains = () => {
+    // Redirection simple sans filtres
+    router.push("/calendrier");
+  };
 
   return (
     <>
       <div className="home-page-container">
-        <img
-          src="/images/home-page.png"
-          alt="une image de fond"
-          id="home-page-bg"
-        />
+        <img src="/images/home-page.png" alt="fond" id="home-page-bg" />
         <div className="home-page-overlay"></div>
         <div className="home-page-center">
           <div className="home-page-top-text">
@@ -31,8 +42,9 @@ export default function HomePage() {
               en <strong>quelques minutes.</strong>
             </h1>
           </div>
+
           <div className="home-page-filters">
-            <form>
+            <form onSubmit={handleSearchWithFilters}>
               <div className="depart-arrivee">
                 <Input
                   type="text"
@@ -52,9 +64,8 @@ export default function HomePage() {
               </div>
               <div className="aller-retour">
                 <Input
-                  type="text"
-                  name="aller"
-                  placeholder="Aller :"
+                  type="date"
+                  name="date"
                   darkInput={true}
                 />
                 <Input
@@ -64,25 +75,26 @@ export default function HomePage() {
                   darkInput={true}
                 />
               </div>
-              <Button id="recherche-train" text="Rechercher des trains" />
+
+              {/* Bouton qui soumet le formulaire avec filtres */}
+              <Button
+                id="recherche-train"
+                type="submit"
+                text="Rechercher des trains"
+              />
             </form>
+
+            {/* Bouton pour voir tout les trains sans filtres */}
+            <div className="btn_scroll">
+              <Button
+                id="btn-voir-departs"
+                onClick={handleSeeAllTrains}
+                text="Voir tous les trains"
+              />
+            </div>
           </div>
         </div>
       </div>
-      <div className="departs_info">
-        <p className="text_info">Tous les départs</p>
-        <ArrowDown color="white" />
-      </div>
-      <section>
-        <h2>Départs de trains</h2>
-        <ul>
-          {departs.map((c) => (
-            <li key={c._id} style={{ marginBottom: "10px" }}>
-              {c.gare_depart} {c.gare_arrivee} {c.train.modele_train}
-            </li>
-          ))}
-        </ul>
-      </section>
     </>
   );
 }
