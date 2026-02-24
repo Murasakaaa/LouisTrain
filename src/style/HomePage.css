@@ -133,7 +133,8 @@
   color: var(--white);
 }
 
-#recherche-train {
+#recherche-train,
+#tous-trains {
   width: 90%;
   padding: 1em;
   font:
@@ -141,22 +142,37 @@
     sans-serif;
 }
 
-.departs_info {
-  padding: 0.5em 1em;
-  border-radius: 1.5rem;
-  background-color: rgba(255, 255, 255, 0.1);
+.btn_scroll {
+  width: 65%; /* Même largeur que ton form */
+  display: flex;
+  justify-content: center; /* Centre le bouton à l'intérieur de ces 65% */
+  margin-top: 20px;
+}
+
+#btn-voir-departs {
+  width: auto; /* Empêche de prendre 100% de la largeur */
+  padding: 10px 20px; /* Donne une taille raisonnable */
+  min-width: 200px; /* Optionnel : pour qu'il garde une jolie forme */
+  cursor: pointer;
+}
+
+.trains_container {
+  margin-top: 10rem;
+  width: 100%;
+}
+
+.trains {
+  width: 70%;
+  padding-left: 5%;
   display: flex;
   flex-direction: column;
-  align-items: center;
   gap: 1rem;
-  color: var(--white);
 }
 
-.text_info {
-  font-size: var(--classic-24px-text);
-}
-
-section {
-  margin-top: 3rem;
-  color: var(--black);
+.trains > h2 {
+  font:
+    400 var(--home-page-h2) "DM Sans",
+    sans-serif;
+  font-style: normal;
+  font-size: var(--home-page-h2);
 }

@@ -32,6 +32,9 @@
   transition: all 0.3s ease;
 }
 
+html {
+  scroll-behavior: smooth !important;
+}
 
 body {
   font-family: "Inter", sans-serif;
