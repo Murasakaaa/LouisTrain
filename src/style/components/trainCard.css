@@ -1,0 +1,251 @@
+/* --- CONTENEUR PRINCIPAL --- */
+.trainCard {
+  width: 100% !important;
+  max-width: none !important; 
+  box-sizing: border-box;
+  background: white;
+  border: 1px solid #d1d5db;
+  border-radius: 20px;
+  padding: 1.5rem;
+  margin: 1rem 0;
+  transition: all 0.3s ease;
+  font-family: "Inter", sans-serif;
+}
+
+/* Changement de bordure quand la carte est ouverte */
+.trainCard.open {
+  border-color: #3b82f6;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+/* --- LIGNE SUPÉRIEURE (MAIN ROW) --- */
+.card-main-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+/* Identifiant du Train (Le petit badge orange) */
+.train-info {
+  display: flex;
+  align-items: center;
+}
+
+.train-tag {
+  background: #f97316;
+  color: white;
+  padding: 2px 8px;
+  border-radius: 6px;
+  font-weight: bold;
+  font-size: 0.9rem;
+  margin-right: 8px;
+}
+
+.train-number {
+  color: #4b5563;
+  font-size: 0.8rem;
+  font-weight: bold;
+}
+
+/* --- LE TRAJET (HORAIRES ET LIGNE) --- */
+.journey-container {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  flex: 1;
+  justify-content: space-between;
+  flex: 2;
+  margin: 0 5rem;
+}
+
+.station-block {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.station-block .time {
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: #111827;
+  line-height: 1.2;
+}
+
+.station-block .station-name {
+  color: #6b7280;
+  font-size: 0.95rem;
+}
+
+.journey-line {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  color: #111827;
+}
+
+.line {
+  width: 60px;
+  height: 1px;
+  background: #d1d5db;
+}
+
+.icon-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.duration {
+  font-size: 0.75rem;
+  font-weight: 600;
+  margin-top: 2px;
+}
+
+/* --- BADGES ET PRIX --- */
+.availability-tag {
+  background: #0f172a;
+  color: white;
+  padding: 8px 16px;
+  border-radius: 8px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.price-block {
+  display: flex;
+  flex-direction: column;
+  text-align: right;
+  min-width: 100px;
+}
+
+.price-block .label {
+  font-size: 0.75rem;
+  color: #374151;
+  font-weight: 600;
+}
+
+.price-block .amount {
+  font-size: 1.6rem;
+  font-weight: 800;
+  color: #dc2626;
+}
+
+.toggle-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #111827;
+  display: flex;
+  align-items: center;
+  padding: 5px;
+}
+
+/* --- SECTION OPTIONS (ACCORDÉON) --- */
+.divider {
+  border: 0;
+  border-top: 1px solid #e5e7eb;
+  margin: 1.5rem 0;
+}
+
+.card-options-section h3 {
+  font-size: 1.4rem;
+  font-weight: 800;
+  margin-bottom: 1.2rem;
+  color: #111827;
+}
+
+.options-controls {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  position: relative;
+}
+
+/* --- DROPDOWN NOIR --- */
+.dropdown-wrapper {
+  position: relative;
+}
+
+.custom-select {
+  background: #0f172a;
+  color: white;
+  padding: 10px 16px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: background 0.2s;
+  white-space: nowrap;
+}
+
+.custom-select:hover {
+  background: #1e293b;
+}
+
+.options-menu {
+  position: absolute;
+  top: calc(100% + 8px);
+  left: 0;
+  width: 260px;
+  background: #0f172a;
+  color: white;
+  border-radius: 10px;
+  list-style: none;
+  padding: 8px 0;
+  z-index: 100;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+  margin: 0;
+}
+
+.options-menu li {
+  padding: 12px 20px;
+  display: flex;
+  justify-content: space-between;
+  cursor: pointer;
+  font-size: 0.9rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.options-menu li:last-child {
+  border-bottom: none;
+}
+
+.options-menu li:hover {
+  background: #1e293b;
+}
+
+/* --- PILLS (OPTIONS SÉLECTIONNÉES) --- */
+.pills-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  flex: 1; /* Permet de pousser le bouton de validation à droite */
+}
+
+.selected-option-pill {
+  background: #e5e7eb;
+  padding: 8px 12px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.85rem;
+  color: #374151;
+  font-weight: 500;
+  animation: scaleIn 0.2s ease-out;
+}
+
+@keyframes scaleIn {
+  from {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}

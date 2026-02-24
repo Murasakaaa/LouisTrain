@@ -1,24 +1,64 @@
 "use client";
-import React, { useState, useEffect} from "react";
-import { useSearchParams } from "next/navigation"; // 1. Import pour lire l'URL
+import React, { useState, useEffect } from "react";
+import { useSearchParams, useRouter } from "next/navigation";
 import "../../style/calendar.css";
 import "../../style/HomePage.css";
 import Button from "../../components/commons/Button";
-import Input from "../../components/commons/Input";
+import Input from "@/components/commons/Input";
+import TrainCard from "@/components/trainCard";
 import { ArrowLeftRight } from "lucide-react";
 
 export default function Calendar() {
   const [hasReturn, setHasReturn] = useState(false);
   const [departs, setDeparts] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+
+  const router = useRouter();
+  const searchParams = useSearchParams(); // pour récuperer les params dans l'url
+
+  const handleUpdateSearch = (e) => {
+    e.preventDefault();
+
+    // On récupère les données du formulaire
+    const formData = new FormData(e.currentTarget);
+    const depart = formData.get("depart");
+    const arrivee = formData.get("arrivee");
+    const dateDepart = formData.get("date_départ");
+    const dateRetour = formData.get("date_retour");
+
+    // On construit la nouvelle URL avec les nouveaux filtres
+    let newUrl = `/calendar?depart=${depart}&arrivee=${arrivee}&date_depart=${dateDepart}`;
+
+    if (hasReturn && dateRetour) {
+      newUrl += `&date_retour=${dateRetour}`;
+    }
+
+    router.push(newUrl);
+  };
 
   useEffect(() => {
-      fetch("") // le fetch va appeler le fichier route.js qui est dans le dossier /api/client
-        .then((res) => res.json())
-        .then((data) => setDeparts(data));
-    }, []);
-    
-  // 2. Initialisation des paramètres de recherche
-  const searchParams = useSearchParams();
+    setIsLoading(true);
+
+    const depart = searchParams.get("depart");
+    const arrivee = searchParams.get("arrivee");
+    const dateD = searchParams.get("date_depart");
+    const dateR = searchParams.get("date_retour");
+
+    let apiUrl = "/api/departs";
+
+    // Si on a des filtres dans l'URL, on les ajoute à l'appel API
+    // if (depart || arrivee) {
+    //   apiUrl += `?gare_depart=${depart}&gare_arrivee=${arrivee}`;
+    // }
+
+    fetch(apiUrl)
+      .then((res) => res.json())
+      .then((data) => {
+        setDeparts(data);
+        setIsLoading(false);
+      })
+      .catch((err) => console.error("Erreur fetch:", err));
+  }, [searchParams]);
 
   // On vérifie si on a au moins un critère de recherche
   const isFiltered = searchParams.has("depart") || searchParams.has("arrivee");
@@ -62,7 +102,7 @@ export default function Calendar() {
                   />
                 </div>
 
-                {/* Checkbox décalée vers le bas pour s'aligner avec l'input */}
+                {/* Checkbox pour activer le retour dans la recherche */}
                 <label className="checkbox-container">
                   <input
                     type="checkbox"
@@ -73,7 +113,7 @@ export default function Calendar() {
                 </label>
               </div>
 
-              {/* Groupe Date de retour (Conditionnel) */}
+              {/* si le client coche la case retour, on affiche cela*/}
               {hasReturn && (
                 <div className="return-input-animate">
                   <div className="input-with-label">
@@ -95,14 +135,34 @@ export default function Calendar() {
       </div>
 
       <div className="all_trains_container">
-        {/* 3. Condition d'affichage du titre */}
-        <h2>
-          {isFiltered
-            ? "Résultats de la recherche:"
-            : "Tous les départs disponibles:"}
-        </h2>
-        {/*si il n'y a pas de résultat on affichera un texte par défaut*/}
-        {departs.length > 0 ? "test" : "Aucun départs"}
+        <h2>{isFiltered ? "Résultats :" : "Tous les départs :"}</h2>
+
+        <div className="trains_list">
+          {isLoading ? (
+            <div className="loading-state">
+              <div className="spinner"></div>
+              <p>Recherche des meilleurs trajets...</p>
+            </div>
+          ) : departs.length > 0 ? (
+            departs.map((item) => (
+              <TrainCard
+                key={item._id}
+                trainID={item.train.modele_train}
+                gareD={item.gare_depart}
+                gareA={item.gare_arrivee}
+                heureD={item.heure_depart}
+                heureA={item.heure_arrivee}
+                nb_place_restantes={item.train.nb_places_restantes}
+                prix={item.prix.$numberDecimal}
+                optionsDispo={item.options_disponibles}
+              />
+            ))
+          ) : (
+            <div className="no-results">
+              <p>Désolé, aucun départ ne correspond à vos critères.</p>
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );

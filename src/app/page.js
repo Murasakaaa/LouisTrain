@@ -1,13 +1,13 @@
 "use client";
 import React, { useState, useEffect } from "react";
-import { useRouter } from "next/navigation"; // 1. Import du router
+import { useRouter } from "next/navigation";
 import "../style/HomePage.css";
 import Button from "../components/commons/Button";
 import Input from "../components/commons/Input";
 import { ArrowLeftRight } from "lucide-react";
 
 export default function HomePage() {
-  const router = useRouter(); // 2. Initialisation
+  const router = useRouter();
 
   // Fonctions de redirection
   const handleSearchWithFilters = (e) => {
@@ -44,7 +44,6 @@ export default function HomePage() {
           </div>
 
           <div className="home-page-filters">
-            {/* 3. On attache handleSearchWithFilters au onSubmit du form */}
             <form onSubmit={handleSearchWithFilters}>
               <div className="depart-arrivee">
                 <Input
@@ -77,7 +76,7 @@ export default function HomePage() {
                 />
               </div>
 
-              {/* Bouton 1 : Soumet le formulaire avec filtres */}
+              {/* Bouton qui soumet le formulaire avec filtres */}
               <Button
                 id="recherche-train"
                 type="submit"
@@ -85,7 +84,7 @@ export default function HomePage() {
               />
             </form>
 
-            {/* 4. Bouton 2 : Voir tout (hors du form ou avec type="button") */}
+            {/* Bouton pour voir tout les trains sans filtres */}
             <div className="btn_scroll">
               <Button
                 id="btn-voir-departs"
