@@ -1,18 +1,16 @@
 "use client";
 import "../style/components/Tableau.css";
-import { Trash2 } from "lucide-react";
 
-export default function Tableau({ title, data }) {
-  const headers = [
-    "Nom du client",
-    "Civilite",
-    "Téléphone/Mail",
-    "N°Carte d’abonnement",
-    "Action",
-  ];
-
+export default function Tableau({
+  style,
+  title,
+  data,
+  headers,
+  handleAction,
+  buttonAction,
+}) {
   return (
-    <div className="table-container">
+    <div className="table-container" style={style}>
       <div className="top">
         <h3>{title}</h3>
         <p>Total : {data.length}</p>
@@ -21,17 +19,24 @@ export default function Tableau({ title, data }) {
         {/* Table header */}
         <thead className="table-header">
           <tr>
-            {headers.map((header) => (
-              <th key={header}>{header}</th>
+            {headers.map((col) => (
+              <th key={col.header}>{col.header}</th>
             ))}
+            <th>Action</th>
           </tr>
         </thead>
 
         {/* Table body */}
         {data.length !== 0 && (
           <tbody className="table-body">
-            {data.map((row, index) => (
-              <TableRow key={index} client={row} />
+            {data.map((row) => (
+              <TableRow
+                key={row._id}
+                client={row}
+                columns={headers}
+                handleAction={handleAction}
+                buttonAction={buttonAction}
+              />
             ))}
           </tbody>
         )}
@@ -40,21 +45,23 @@ export default function Tableau({ title, data }) {
   );
 }
 
-const TableRow = ({ client }) => {
-  const handleDeleteRow = () => {
-    console.log("Delete row");
+const TableRow = ({ client, columns, handleAction, buttonAction }) => {
+  const getValue = (obj, path) => {
+    return path.split(".").reduce((acc, part) => acc?.[part], obj);
   };
+
   return (
     <tr className="table-row">
-      <td>{client.nom + " " + client.prenom}</td>
-      <td>{client.civilite}</td>
-      <td>{client.telephone ?? client.email}</td>
-      <td>{client.abonnement.num_carte}</td>
+      {columns.map((col, index) => (
+        <td key={index}>
+          {typeof col.accessor === "function"
+            ? col.accessor(client)
+            : getValue(client, col.accessor)}
+        </td>
+      ))}
 
       <td>
-        <button onClick={handleDeleteRow}>
-          <Trash2 size={"15px"} color="#383838" />
-        </button>
+        <button onClick={() => handleAction(client)}>{buttonAction}</button>
       </td>
     </tr>
   );

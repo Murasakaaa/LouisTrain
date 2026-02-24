@@ -1,9 +1,6 @@
 .table-container {
   border: 1px solid #c9c9c9;
   border-radius: 20px;
-  max-height: 550px;
-  min-height: 550px;
-  flex: 1;
 }
 .table-container .top {
   display: flex;

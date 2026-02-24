@@ -1,15 +1,15 @@
-import mongoose from 'mongoose';
+import mongoose from "mongoose";
 
 // 1. Schéma pour les options d'un billet
 const optionSchema = new mongoose.Schema({
   nom: String,
-  prix: Number
+  prix: Number,
 });
 
 // 2. Schéma pour un billet (Aller ou Retour)
 const billetSchema = new mongoose.Schema({
   num_billet: String,
-  sens: { type: String, enum: ['aller', 'retour'] },
+  sens: { type: String, enum: ["aller", "retour"] },
   depart_id: String, // Référence vers l'ID du trajet dans la collection Trains
   gare_depart: String,
   gare_arrivee: String,
@@ -19,7 +19,7 @@ const billetSchema = new mongoose.Schema({
   options_choisies: [optionSchema],
   prix_billet: Number,
   prix_options: Number,
-  prix_ttc: Number
+  prix_ttc: Number,
 });
 
 // 3. Schéma pour le paiement
@@ -27,7 +27,7 @@ const paiementSchema = new mongoose.Schema({
   titulaire_cb: String,
   num_cb_masque: String,
   num_autorisation: String,
-  date_expiration: String
+  date_expiration: String,
 });
 
 // 4. Schéma pour une réservation
@@ -38,7 +38,7 @@ const reservationSchema = new mongoose.Schema({
   reduction_appliquee: Number,
   prix_total: Number,
   voyage: [billetSchema], // Tableau de billets (Aller/Retour)
-  paiement: paiementSchema
+  paiement: paiementSchema,
 });
 
 // 5. Schéma principal : Le Client
@@ -53,12 +53,15 @@ const clientSchema = new mongoose.Schema({
   abonnement: {
     num_carte: String,
     code_reduction: String,
-    montant_reduction: Number
+    montant_reduction: Number,
   },
-  reservations: [reservationSchema] // Tableau de toutes les réservations du client
+  reservations: [reservationSchema], // Tableau de toutes les réservations du client
+  demande_abo: {
+    type: Boolean,
+    default: "false",
+  },
 });
 
 // Création du modèle
-const Client = mongoose.models.Client || mongoose.model('Client', clientSchema, "clients");
-
+const Client = mongoose.models.Client || mongoose.model("Client", clientSchema);
 export default Client;
