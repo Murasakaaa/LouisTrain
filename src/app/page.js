@@ -16,11 +16,12 @@ export default function HomePage() {
     const formData = new FormData(e.currentTarget);
     const depart = formData.get("depart");
     const arrivee = formData.get("arrivee");
-    const aller = formData.get("aller");
+    const dateDepart = formData.get("date_depart");
+    const dateRetour = formData.get("date_retour");
 
     // Redirection avec paramètres (ex: /calendrier?depart=Paris&arrivee=Lyon)
     router.push(
-      `/calendrier?depart=${depart}&arrivee=${arrivee}&date=${aller}`,
+      `/calendrier?depart=${depart}&arrivee=${arrivee}&date_depart=${dateDepart}&date_retour=${dateRetour}`,
     );
   };
 
@@ -60,19 +61,17 @@ export default function HomePage() {
                   name="arrivee"
                   placeholder="Arrivée :"
                   darkInput={true}
+                  style={{ paddingLeft: "30px" }}
                 />
               </div>
               <div className="aller-retour">
-                <Input
-                  type="date"
-                  name="date"
-                  darkInput={true}
-                />
+                <Input type="date" name="date_depart" darkInput={true} />
                 <Input
                   type="text"
-                  name="retour"
+                  name="date_retour"
                   placeholder="Ajouter le retour +"
                   darkInput={true}
+                  style={{ paddingLeft: "30px" }}
                 />
               </div>
 

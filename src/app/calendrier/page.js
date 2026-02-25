@@ -11,56 +11,88 @@ import { ArrowLeftRight } from "lucide-react";
 export default function Calendar() {
   const [hasReturn, setHasReturn] = useState(false);
   const [departs, setDeparts] = useState([]);
+  const [retours, setRetours] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
+
+  const [dataForm, setDataForm] = useState({
+    depart: "",
+    arrivee: "",
+    dateDepart: "",
+    dateRetour: "",
+  });
 
   const router = useRouter();
   const searchParams = useSearchParams(); // pour récuperer les params dans l'url
 
-  const handleUpdateSearch = (e) => {
-    e.preventDefault();
-
-    // On récupère les données du formulaire
-    const formData = new FormData(e.currentTarget);
-    const depart = formData.get("depart");
-    const arrivee = formData.get("arrivee");
-    const dateDepart = formData.get("date_départ");
-    const dateRetour = formData.get("date_retour");
-
-    // On construit la nouvelle URL avec les nouveaux filtres
-    let newUrl = `/calendar?depart=${depart}&arrivee=${arrivee}&date_depart=${dateDepart}`;
-
-    if (hasReturn && dateRetour) {
-      newUrl += `&date_retour=${dateRetour}`;
-    }
-
-    router.push(newUrl);
+  // Changement des inputs du formulaire
+  const handleChange = ({ target: { name, value } }) => {
+    setDataForm((prev) => ({ ...prev, [name]: value }));
   };
 
+  // Construction de l'URL avec les filtres
+  const buildSearchUrl = () => {
+    const params = new URLSearchParams();
+
+    if (dataForm.depart) params.append("depart", dataForm.depart);
+    if (dataForm.arrivee) params.append("arrivee", dataForm.arrivee);
+    if (dataForm.dateDepart) params.append("date_depart", dataForm.dateDepart);
+    if (hasReturn && dataForm.dateRetour)
+      params.append("date_retour", dataForm.dateRetour);
+
+    return `/calendrier?${params.toString()}`;
+  };
+
+  const handleUpdateSearch = () => {
+    router.push(buildSearchUrl());
+  };
+
+  // Synchroniser les paramètres URL dans le state
   useEffect(() => {
-    setIsLoading(true);
+    const depart = searchParams.get("depart") || "";
+    const arrivee = searchParams.get("arrivee") || "";
+    const dateDepart = searchParams.get("date_depart") || "";
+    const dateRetour = searchParams.get("date_retour") || "";
 
-    const depart = searchParams.get("depart");
-    const arrivee = searchParams.get("arrivee");
-    const dateD = searchParams.get("date_depart");
-    const dateR = searchParams.get("date_retour");
+    setDataForm({
+      depart,
+      arrivee,
+      dateDepart,
+      dateRetour,
+    });
 
-    let apiUrl = "/api/departs";
-
-    // Si on a des filtres dans l'URL, on les ajoute à l'appel API
-    // if (depart || arrivee) {
-    //   apiUrl += `?gare_depart=${depart}&gare_arrivee=${arrivee}`;
-    // }
-
-    fetch(apiUrl)
-      .then((res) => res.json())
-      .then((data) => {
-        setDeparts(data);
-        setIsLoading(false);
-      })
-      .catch((err) => console.error("Erreur fetch:", err));
+    setHasReturn(!!dateRetour);
   }, [searchParams]);
 
-  // On vérifie si on a au moins un critère de recherche
+  // Fetch des données quand les paramètres changent
+  useEffect(() => {
+    const fetchDeparts = async () => {
+      try {
+        setIsLoading(true);
+
+        const apiParams = new URLSearchParams(searchParams.toString());
+
+        const response = await fetch(
+          `/api/departs${
+            apiParams.toString() ? `?${apiParams.toString()}` : ""
+          }`,
+        );
+
+        const data = await response.json();
+
+        setDeparts(data.aller || []);
+        // Si tu veux afficher les retours aussi :
+        setRetours(data.retour || []);
+      } catch (error) {
+        console.error("Erreur fetch :", error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchDeparts();
+  }, [searchParams]);
+
+  // On vérifie si on a au moins un filtre
   const isFiltered = searchParams.has("depart") || searchParams.has("arrivee");
 
   return (
@@ -70,13 +102,20 @@ export default function Calendar() {
           <h1>Calendrier des Trains</h1>
         </div>
         <div className="filters">
-          <form>
+          <form
+            onSubmit={(e) => {
+              e.preventDefault();
+              handleUpdateSearch();
+            }}
+          >
             <div className="depart-arrivee">
               <Input
                 type="text"
                 name="depart"
                 placeholder="Départ :"
                 darkInput={true}
+                onChange={handleChange}
+                value={dataForm.depart}
               />
               <div className="icon">
                 <ArrowLeftRight id="LeftRightArrow" />
@@ -86,6 +125,9 @@ export default function Calendar() {
                 name="arrivee"
                 placeholder="Arrivée :"
                 darkInput={true}
+                style={{ paddingLeft: "30px" }}
+                onChange={handleChange}
+                value={dataForm.arrivee}
               />
             </div>
 
@@ -97,8 +139,10 @@ export default function Calendar() {
                   <Input
                     type="date"
                     id="date_départ"
-                    name="date_départ"
+                    name="dateDepart"
                     darkInput={true}
+                    onChange={handleChange}
+                    value={dataForm.dateDepart}
                   />
                 </div>
 
@@ -121,15 +165,21 @@ export default function Calendar() {
                     <Input
                       type="date"
                       id="date_retour"
-                      name="date_retour"
+                      name="dateRetour"
                       darkInput={true}
+                      onChange={handleChange}
+                      value={dataForm.dateRetour}
                     />
                   </div>
                 </div>
               )}
             </div>
 
-            <Button id="recherche-train" text="Mettre à jour la recherche" />
+            <Button
+              id="recherche-train"
+              text="Mettre à jour la recherche"
+              type="submit"
+            />
           </form>
         </div>
       </div>
@@ -137,6 +187,7 @@ export default function Calendar() {
       <div className="all_trains_container">
         <h2>{isFiltered ? "Résultats :" : "Tous les départs :"}</h2>
 
+        {/* ----------------- Aller ----------------- */}
         <div className="trains_list">
           {isLoading ? (
             <div className="loading-state">
@@ -163,6 +214,39 @@ export default function Calendar() {
             </div>
           )}
         </div>
+
+        {/* ----------------- Retour ----------------- */}
+        {hasReturn && (
+          <>
+            <h2>Retour :</h2>
+            <div className="trains_list">
+              {isLoading ? (
+                <div className="loading-state">
+                  <div className="spinner"></div>
+                  <p>Recherche des meilleurs trajets...</p>
+                </div>
+              ) : retours.length > 0 ? (
+                retours.map((item) => (
+                  <TrainCard
+                    key={item._id}
+                    trainID={item.train.modele_train}
+                    gareD={item.gare_depart}
+                    gareA={item.gare_arrivee}
+                    heureD={item.heure_depart}
+                    heureA={item.heure_arrivee}
+                    nb_place_restantes={item.train.nb_places_restantes}
+                    prix={item.prix.$numberDecimal}
+                    optionsDispo={item.options_disponibles}
+                  />
+                ))
+              ) : (
+                <div className="no-results">
+                  <p>Désolé, aucun retour ne correspond à vos critères.</p>
+                </div>
+              )}
+            </div>
+          </>
+        )}
       </div>
     </div>
   );
