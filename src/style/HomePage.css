@@ -83,7 +83,7 @@
   display: flex;
   justify-content: center;
   gap: 0.3em;
-  width: 90%;
+  width: 100%;
 }
 #depart,
 #arrivee,
@@ -155,23 +155,43 @@
   cursor: pointer;
 }
 
-.trains_container {
-  margin-top: 10rem;
-  width: 100%;
-}
-
-.trains {
-  width: 70%;
-  padding-left: 5%;
+.aller-retour-wrapper {
   display: flex;
   flex-direction: column;
-  gap: 1rem;
+  align-items: center;
+  width: 90%;
+  gap: 0.8em;
 }
 
-.trains > h2 {
-  font:
-    400 var(--home-page-h2) "DM Sans",
-    sans-serif;
-  font-style: normal;
-  font-size: var(--home-page-h2);
+.checkbox-container-home {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: var(--white);
+  cursor: pointer;
+  font-family: "Inter", sans-serif;
+  font-size: 0.9rem;
+  align-self: flex-start;
+}
+.checkbox-container-home input {
+  width: 1.2rem;
+  height: 1.2rem;
+  cursor: pointer;
+  accent-color: var(--main-green);
+}
+
+.return-input-container {
+  width: 50%;
+  animation: slideInLeft 0.3s ease-out forwards;
+}
+
+@keyframes slideInLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-15px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
 }

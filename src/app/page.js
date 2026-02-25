@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import "../style/HomePage.css";
 import Button from "../components/commons/Button";
@@ -8,25 +8,25 @@ import { ArrowLeftRight } from "lucide-react";
 
 export default function HomePage() {
   const router = useRouter();
+  const [hasReturn, setHasReturn] = useState(false); // gestion du retour
 
-  // Fonctions de redirection
   const handleSearchWithFilters = (e) => {
     e.preventDefault();
-    // On récupère les valeurs via FormData pour faire simple
     const formData = new FormData(e.currentTarget);
     const depart = formData.get("depart");
     const arrivee = formData.get("arrivee");
     const dateDepart = formData.get("date_depart");
-    const dateRetour = formData.get("date_retour");
+    
+    // On ne récupère la date de retour que si la case est cochée
+    const dateRetour = hasReturn ? formData.get("date_retour") : "";
 
-    // Redirection avec paramètres (ex: /calendrier?depart=Paris&arrivee=Lyon)
+    // Redirection en ignorant le retour s'il n'y en a pas
     router.push(
-      `/calendrier?depart=${depart}&arrivee=${arrivee}&date_depart=${dateDepart}&date_retour=${dateRetour}`,
+      `/calendrier?depart=${depart}&arrivee=${arrivee}&date_depart=${dateDepart}${hasReturn && dateRetour ? `&date_retour=${dateRetour}` : ""}`
     );
   };
 
   const handleSeeAllTrains = () => {
-    // Redirection simple sans filtres
     router.push("/calendrier");
   };
 
@@ -64,18 +64,48 @@ export default function HomePage() {
                   style={{ paddingLeft: "30px" }}
                 />
               </div>
-              <div className="aller-retour">
-                <Input type="date" name="date_depart" darkInput={true} />
-                <Input
-                  type="text"
-                  name="date_retour"
-                  placeholder="Ajouter le retour +"
-                  darkInput={true}
-                  style={{ paddingLeft: "30px" }}
-                />
+
+              <div className="aller-retour-wrapper">
+                <div className="aller-retour">
+                  <Input 
+                    type="date" 
+                    name="date_depart" 
+                    darkInput={true} 
+                    style={{
+                      width: hasReturn ? "50%" : "100%",
+                      borderTopRightRadius: hasReturn ? "0" : "1em",
+                      borderBottomRightRadius: hasReturn ? "0" : "1em",
+                      transition: "all 0.3s ease"
+                    }}
+                  />
+                  
+                  {hasReturn && (
+                    <div className="return-input-container">
+                      <Input
+                        type="date"
+                        name="date_retour"
+                        darkInput={true}
+                        style={{ 
+                          width: "100%", 
+                          borderTopLeftRadius: "0", 
+                          borderBottomLeftRadius: "0" 
+                        }}
+                      />
+                    </div>
+                  )}
+                </div>
+
+                {/* La Checkbox pour signaler qu'on souhaite avoir le retour*/}
+                <label className="checkbox-container-home">
+                  <input
+                    type="checkbox"
+                    checked={hasReturn}
+                    onChange={(e) => setHasReturn(e.target.checked)}
+                  />
+                  <span>Ajouter un retour ?</span>
+                </label>
               </div>
 
-              {/* Bouton qui soumet le formulaire avec filtres */}
               <Button
                 id="recherche-train"
                 type="submit"
@@ -83,7 +113,6 @@ export default function HomePage() {
               />
             </form>
 
-            {/* Bouton pour voir tout les trains sans filtres */}
             <div className="btn_scroll">
               <Button
                 id="btn-voir-departs"

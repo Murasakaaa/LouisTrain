@@ -11,6 +11,10 @@
   font-weight: bold;
 }
 
+.logo:hover {
+  cursor: pointer;
+}
+
 .navbar .logo span {
   color: var(--main-green);
 }

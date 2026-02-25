@@ -26,26 +26,27 @@
   gap: 1rem;
 }
 
-/* Identifiant du Train (Le petit badge orange) */
+/* Identifiant du Train + date */
 .train-info {
   display: flex;
-  align-items: center;
-}
-
-.train-tag {
-  background: #f97316;
-  color: white;
-  padding: 2px 8px;
-  border-radius: 6px;
-  font-weight: bold;
-  font-size: 0.9rem;
-  margin-right: 8px;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 100px;
 }
 
 .train-number {
-  color: #4b5563;
-  font-size: 0.8rem;
-  font-weight: bold;
+  color: #111827;
+  font-size: 0.9rem;
+  font-weight: 800;
+}
+
+.date-display {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  color: #6b7280;
+  font-size: 0.75rem;
+  font-weight: 500;
 }
 
 /* --- LE TRAJET (HORAIRES ET LIGNE) --- */

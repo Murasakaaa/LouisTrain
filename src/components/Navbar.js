@@ -2,8 +2,10 @@
 import React from "react";
 import Button from "./commons/Button";
 import "../style/components/Navbar.css";
+import { useRouter } from "next/navigation";
 
 export default function Navbar({ isConnected, userName, isWhite }) {
+  const router = useRouter();
   const buttonConnexion = (
     <Button text="Se connecter" onClick={() => console.log("Se connecter")} />
   );
@@ -14,11 +16,16 @@ export default function Navbar({ isConnected, userName, isWhite }) {
     </div>
   );
 
+  const handleBackHome = () => {
+    router.replace("/");
+  }
+
   return (
     <div className="navbar">
       <h1
         className="logo"
         style={{ color: isWhite ? "var(--white)" : "var(--black)" }}
+        onClick={handleBackHome}
       >
         Louis<span>Train</span>
       </h1>

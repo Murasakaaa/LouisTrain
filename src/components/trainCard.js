@@ -1,9 +1,10 @@
 "use client";
 import React, { useState } from "react";
-import { Train, ChevronUp, ChevronDown, X } from "lucide-react";
+import { Train, ChevronUp, ChevronDown, X, Calendar } from "lucide-react"; // Ajout de l'icône Calendar
 import Button from "./commons/Button";
 import "@/style/components/trainCard.css";
 
+// calcul de la durée du trajet
 const calculerDuree = (debut, fin) => {
   const [h1, m1] = debut.split(":").map(Number);
   const [h2, m2] = fin.split(":").map(Number);
@@ -23,6 +24,7 @@ export default function TrainCard({
   gareA,
   heureD,
   heureA,
+  date,
   nb_place_restantes,
   prix,
   optionsDispo,
@@ -31,13 +33,26 @@ export default function TrainCard({
   const [showDropdown, setShowDropdown] = useState(false);
   const [selectedOptions, setSelectedOptions] = useState([]);
 
+  // formattage de la date
+  const dateObjet = new Date(date);
+  const dateFormatee = dateObjet.toLocaleDateString("fr-FR", {
+    day: "numeric",
+    month: "short",
+    year: "numeric",
+  });
+
+
   const duree = calculerDuree(heureD, heureA);
+
+  // ajouter les options sélectionnée dans l'array
   const toggleOption = (option) => {
     if (!selectedOptions.find((o) => o.nom === option.nom)) {
       setSelectedOptions([...selectedOptions, option]);
     }
     setShowDropdown(false);
   };
+
+  // supprimer une option
   const removeOption = (optionNom) => {
     setSelectedOptions(selectedOptions.filter((o) => o.nom !== optionNom));
   };
@@ -46,8 +61,11 @@ export default function TrainCard({
     <div className={`trainCard ${isOpen ? "open" : ""}`}>
       <div className="card-main-row">
         <div className="train-info">
-          <span className="train-tag">P</span>
           <span className="train-number">{trainID}</span>
+          <div className="date-display">
+            <Calendar size={12} />
+            <span>{dateFormatee}</span>
+          </div>
         </div>
 
         <div className="journey-container">
@@ -92,7 +110,6 @@ export default function TrainCard({
           <h3>Options</h3>
 
           <div className="options-controls">
-            {/* Dropdown Noir */}
             <div className="dropdown-wrapper">
               <div
                 className="custom-select"
@@ -113,7 +130,6 @@ export default function TrainCard({
               )}
             </div>
 
-            {/* Affichage des options sélectionnées */}
             <div className="pills-container">
               {selectedOptions.map((opt, index) => (
                 <div key={index} className="selected-option-pill">
@@ -127,7 +143,10 @@ export default function TrainCard({
               ))}
             </div>
 
-            <Button text="Choisir ma place" onClick={() => console.log(selectedOptions)}/>
+            <Button
+              text="Choisir ma place"
+              onClick={() => console.log(selectedOptions)}
+            />
           </div>
         </div>
       )}

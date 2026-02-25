@@ -116,6 +116,7 @@
   width: 1.2rem;
   height: 1.2rem;
   cursor: pointer;
+  accent-color: var(--main-green);
 }
 
 /* Petite animation quand l'input apparaît */
@@ -146,7 +147,6 @@
   font-family: "DM Sans", sans-serif;
   font-weight: 700;
   color: var(--black);
-  margin-bottom: 2rem;
   font-size: 2rem;
 }
 
@@ -154,7 +154,7 @@
   display: flex;
   flex-direction: column;
   gap: 20px;
-  margin-top: 2rem;
+  margin-top: 1rem;
   width: 100%;
 }
 

@@ -15,26 +15,33 @@ export async function GET(request) {
 
     const buildDateFilter = (dateString) => {
       if (!dateString) return null;
-
       const start = new Date(dateString);
       const end = new Date(dateString);
       end.setHours(23, 59, 59, 999);
-
       return { $gte: start, $lte: end };
     };
 
+    // --- FILTRES ALLER ---
     const allerFilters = {};
 
-    if (depart) allerFilters.gare_depart = depart;
-    if (arrivee) allerFilters.gare_arrivee = arrivee;
-    if (dateDepart) allerFilters.date = buildDateFilter(dateDepart);
+    // Utilisation de $regex pour le "LIKE %...%"
+    if (depart) {
+      allerFilters.gare_depart = { $regex: depart, $options: "i" };
+    }
+    if (arrivee) {
+      allerFilters.gare_arrivee = { $regex: arrivee, $options: "i" };
+    }
+    if (dateDepart) {
+      allerFilters.date = buildDateFilter(dateDepart);
+    }
 
+    // --- FILTRES RETOUR ---
     let retourFilters = null;
-
     if (dateRetour && depart && arrivee) {
       retourFilters = {
-        gare_depart: arrivee,
-        gare_arrivee: depart,
+        // Inversion des gares avec regex également
+        gare_depart: { $regex: arrivee, $options: "i" },
+        gare_arrivee: { $regex: depart, $options: "i" },
         date: buildDateFilter(dateRetour),
       };
     }

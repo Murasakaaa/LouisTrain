@@ -80,7 +80,6 @@ export default function Calendar() {
         const data = await response.json();
 
         setDeparts(data.aller || []);
-        // Si tu veux afficher les retours aussi :
         setRetours(data.retour || []);
       } catch (error) {
         console.error("Erreur fetch :", error);
@@ -203,6 +202,7 @@ export default function Calendar() {
                 gareA={item.gare_arrivee}
                 heureD={item.heure_depart}
                 heureA={item.heure_arrivee}
+                date={item.date}
                 nb_place_restantes={item.train.nb_places_restantes}
                 prix={item.prix.$numberDecimal}
                 optionsDispo={item.options_disponibles}
@@ -234,6 +234,7 @@ export default function Calendar() {
                     gareA={item.gare_arrivee}
                     heureD={item.heure_depart}
                     heureA={item.heure_arrivee}
+                    date={item.date}
                     nb_place_restantes={item.train.nb_places_restantes}
                     prix={item.prix.$numberDecimal}
                     optionsDispo={item.options_disponibles}
