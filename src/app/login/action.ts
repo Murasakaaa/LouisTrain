@@ -34,12 +34,12 @@ export async function login(prevState: any, formData: FormData) {
     // ------------------------------------------------------- remplacer client par auth ici
     const authRecord = await Auth.findOne({ login: emailInput });
 
-    console.log("authRecord trouvé :", authRecord);
-    console.log("passwordInput :", passwordInput);
-    console.log("authRecord.pwd :", authRecord?.pwd);
-    console.log("Égalité :", passwordInput === authRecord?.pwd);
-    console.log("emailInput repr:", JSON.stringify(emailInput));
-    console.log("Collection utilisée :", Auth.collection.name);
+    // console.log("authRecord trouvé :", authRecord);
+    // console.log("passwordInput :", passwordInput);
+    // console.log("authRecord.pwd :", authRecord?.pwd);
+    // console.log("Égalité :", passwordInput === authRecord?.pwd);
+    // console.log("emailInput repr:", JSON.stringify(emailInput));
+    // console.log("Collection utilisée :", Auth.collection.name);
 
     // comparaison entre le mdp de la BDD et le mdp dans l'input.
     // On vérifie l'existence ET le mot de passe en même temps.
