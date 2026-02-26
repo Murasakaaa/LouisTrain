@@ -4,8 +4,8 @@ import { useSearchParams, useRouter } from "next/navigation";
 import "../../style/calendar.css";
 import "../../style/HomePage.css";
 import Button from "../../components/commons/Button";
-import Input from "@/components/commons/Input";
-import TrainCard from "@/components/trainCard";
+import Input from "../../components/commons/Input";
+import TrainCard from "../../components/trainCard";
 import { ArrowLeftRight } from "lucide-react";
 
 export default function Calendar() {

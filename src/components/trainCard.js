@@ -2,7 +2,7 @@
 import React, { useState } from "react";
 import { Train, ChevronUp, ChevronDown, X, Calendar } from "lucide-react"; // Ajout de l'icône Calendar
 import Button from "./commons/Button";
-import "@/style/components/trainCard.css";
+import "../style/components/trainCard.css";
 
 // calcul de la durée du trajet
 const calculerDuree = (debut, fin) => {
