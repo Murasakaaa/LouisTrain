@@ -11,6 +11,7 @@ export default function ClientLayout({ children }) {
 
   return (
     <>
+      {/* Afficher le TimeOut que quand on est connecte et que c un client */}
       <TimeOut onComplete={handleSuppSession} />
       <Navbar />
       {children}
