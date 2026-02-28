@@ -1,0 +1,44 @@
+.timeout {
+  position: absolute;
+  top: 30px;
+  left: 50%;
+  transform: translateX(-50%) translateY(-5%);
+  color: white;
+  background-color: red;
+  padding: 10px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  opacity: 0;
+}
+
+.timeout-hidden {
+  animation: hide 0.3s ease-in forwards;
+}
+
+.timeout-show {
+  animation: show 0.3s ease-in forwards;
+}
+
+@keyframes show {
+  from {
+    opacity: 0;
+    transform: translateX(-50%) translateY(-5%);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+}
+
+@keyframes hide {
+  from {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0%);
+  }
+  to {
+    opacity: 0;
+    transform: translateX(-50%) translateY(-5%);
+  }
+}

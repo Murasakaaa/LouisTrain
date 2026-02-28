@@ -1,4 +1,4 @@
-import "server-only";
+"use server";
 import { SignJWT, jwtVerify } from "jose";
 import { cookies } from "next/headers";
 
@@ -6,14 +6,14 @@ const secretKey = process.env.SESSION_SECRET;
 const encodedKey = new TextEncoder().encode(secretKey);
 
 export async function createSession(userId: string) {
-  const expiresAt = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000);  // 7j
+  const expiresAt = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000); // 7j
   const session = await encrypt({ userId, expiresAt });
 
   const cookieStore = await cookies();
 
   cookieStore.set("session", session, {
     httpOnly: true, // empeche le JS de lire le cookie et donc de voler la session
-    secure: true,   // le cookie n'est que avec HTTPS
+    secure: true, // le cookie n'est que avec HTTPS
     expires: expiresAt, // date d'expiration du cookie
     sameSite: "lax", // protection contre les sites tiers
     path: "/", // rend le cookie dispo sur tout le site
@@ -21,6 +21,7 @@ export async function createSession(userId: string) {
 }
 
 export async function deleteSession() {
+  console.log("session supp");
   const cookieStore = await cookies();
   cookieStore.delete("session");
 }

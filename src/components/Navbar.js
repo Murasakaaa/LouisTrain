@@ -7,7 +7,7 @@ import { useRouter } from "next/navigation";
 export default function Navbar({ isConnected, userName, isWhite }) {
   const router = useRouter();
   const buttonConnexion = (
-    <Button text="Se connecter" onClick={() => console.log("Se connecter")} />
+    <Button text="Se connecter" onClick={() => router.replace("/login")} />
   );
   const profil = (
     <div className="navbar-profil">
@@ -18,7 +18,7 @@ export default function Navbar({ isConnected, userName, isWhite }) {
 
   const handleBackHome = () => {
     router.replace("/");
-  }
+  };
 
   return (
     <div className="navbar">
