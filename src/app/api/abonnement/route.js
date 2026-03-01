@@ -15,7 +15,7 @@ export async function GET() {
 
 export async function DELETE(request) {
   await connectDB();
-
+  
   try {
     const { email } = await request.json();
 

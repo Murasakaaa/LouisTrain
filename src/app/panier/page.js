@@ -93,9 +93,6 @@ export default function PanierPage() {
     return acc + base + options;
   }, 0);
 
-  const TVA_TAUX = 20;
-  const montantTVA = prixHT * (TVA_TAUX / 100);
-  const prixTTC = prixHT + montantTVA;
 
   // Groupement par date
   const panierParDate = panier.reduce((acc, item) => {
@@ -107,7 +104,7 @@ export default function PanierPage() {
 
   const handleValiderCommande = () => {
     console.log("Validation de la commande :", panier);
-    // Redirection vers la page de paiement (à implémenter)
+    router.push("../paiement");
   };
 
   const handleAjouterArticle = () => {
@@ -314,29 +311,11 @@ export default function PanierPage() {
 
               <hr className="recap-divider" />
 
-              {/* Prix HT + TVA */}
-              <div className="recap-lignes">
-                <div className="recap-ligne">
-                  <span>Prix HT</span>
-                  <span className="recap-montant">
-                    {prixHT.toFixed(2).replace(".", ",")}€
-                  </span>
-                </div>
-                <div className="recap-ligne recap-tva">
-                  <span>TVA ({TVA_TAUX}%)</span>
-                  <span className="recap-montant">
-                    +{montantTVA.toFixed(2).replace(".", ",")}€
-                  </span>
-                </div>
-              </div>
-
-              <hr className="recap-divider" />
-
               {/* Prix TTC */}
               <div className="recap-ligne recap-ttc">
                 <span>Prix TTC</span>
                 <span className="recap-montant recap-montant--ttc">
-                  {prixTTC.toFixed(2).replace(".", ",")}€
+                  {prixHT.toFixed(2).replace(".", ",")}€
                 </span>
               </div>
 

@@ -23,7 +23,7 @@ export async function POST(request) {
     }
 
     const updatedClient = await Client.findOneAndUpdate(
-      { email: email.trim() },
+      { email: email.trim()},
       {
         $set: {
           demande_abo: false, // Regroupé ici
