@@ -15,7 +15,7 @@
   margin-top: 0.5rem;
 }
 
-.title {
+.filter_container .title {
   width: 100%;
   background-image: url("/images/calendar-image.jpg");
   background-size: cover;

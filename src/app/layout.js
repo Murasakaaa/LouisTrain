@@ -1,5 +1,6 @@
 import "./globals.css";
-import Navbar from "../components/Navbar";
+
+import ClientLayout from "../components/ClientLayout";
 
 export const metadata = {
   title: "Louis Train - Réservation",
@@ -10,8 +11,7 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <body>
-        <Navbar />
-        {children}
+        <ClientLayout>{children}</ClientLayout>
       </body>
     </html>
   );

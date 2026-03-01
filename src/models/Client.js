@@ -1,19 +1,17 @@
 import mongoose from "mongoose";
 
-// 1. Schéma pour les options d'un billet
 const optionSchema = new mongoose.Schema({
   nom: String,
   prix: Number,
 });
 
-// 2. Schéma pour un billet (Aller ou Retour)
 const billetSchema = new mongoose.Schema({
   num_billet: String,
   sens: { type: String, enum: ["aller", "retour"] },
-  depart_id: String, // Référence vers l'ID du trajet dans la collection Trains
+  depart_id: String,
   gare_depart: String,
   gare_arrivee: String,
-  date: String, // Ou Date si tu préfères manipuler des objets Date
+  date: Date,
   heure_depart: String,
   heure_arrivee: String,
   options_choisies: [optionSchema],
@@ -22,7 +20,6 @@ const billetSchema = new mongoose.Schema({
   prix_ttc: Number,
 });
 
-// 3. Schéma pour le paiement
 const paiementSchema = new mongoose.Schema({
   titulaire_cb: String,
   num_cb_masque: String,
@@ -30,20 +27,18 @@ const paiementSchema = new mongoose.Schema({
   date_expiration: String,
 });
 
-// 4. Schéma pour une réservation
 const reservationSchema = new mongoose.Schema({
-  _id: String, // Si tu veux forcer ton propre ID (ex: R123456)
+  _id: String,
   date_reservation: { type: Date, default: Date.now },
   statut: String,
   reduction_appliquee: Number,
   prix_total: Number,
-  voyage: [billetSchema], // Tableau de billets (Aller/Retour)
+  voyage: [billetSchema],
   paiement: paiementSchema,
 });
 
-// 5. Schéma principal : Le Client
 const clientSchema = new mongoose.Schema({
-  _id: String, // ex: "client_001"
+  _id: String,
   civilite: String,
   nom: String,
   prenom: String,
@@ -55,13 +50,12 @@ const clientSchema = new mongoose.Schema({
     code_reduction: String,
     montant_reduction: Number,
   },
-  reservations: [reservationSchema], // Tableau de toutes les réservations du client
+  reservations: [reservationSchema],
   demande_abo: {
     type: Boolean,
     default: "false",
   },
 });
 
-// Création du modèle
 const Client = mongoose.models.Client || mongoose.model("Client", clientSchema);
 export default Client;

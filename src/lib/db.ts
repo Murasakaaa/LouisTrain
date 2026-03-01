@@ -2,7 +2,7 @@
 
 import mongoose from "mongoose";
 
-const MONGODB_URI = process.env.MONGODB_URI;
+const MONGODB_URI = process.env.MONGODB_URI as string;
 
 // affiche certaines choses que quand on utilise npm run dev
 const isDev = process.env.NODE_ENV === "development";
@@ -13,7 +13,7 @@ if (!MONGODB_URI) {
   );
 }
 
-export const connectDB = async () => {
+export const connectDB = async (): Promise<void> => {
   if (mongoose.connection.readyState >= 1) return;
   try {
     await mongoose.connect(MONGODB_URI);
@@ -21,6 +21,7 @@ export const connectDB = async () => {
       console.log("🚀 Connecté à MongoDB (bdd LouisTrain)");
     }
   } catch (error) {
-    console.error("❌ Erreur de connexion à MongoDB :", error.message);
+    const err = error as Error;
+    console.error("❌ Erreur de connexion à MongoDB :", err.message);
   }
 };

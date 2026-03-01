@@ -1,0 +1,586 @@
+/* ============================================
+   panier.css — Page Panier — LouisTrain
+   Chemin : src/style/panier.css
+   ============================================ */
+
+:root {
+  --main-green: #1ca94d;
+  --green-hover: #168f40;
+  --green-light: #e8f8ee;
+  --black: #111111;
+  --dark: #1e1e2e;
+  --grey: #6b7280;
+  --grey-light: #f3f4f6;
+  --border: #e5e7eb;
+  --white: #ffffff;
+  --shadow-card: 0 2px 12px rgba(0, 0, 0, 0.07);
+  --shadow-aside: 0 4px 24px rgba(0, 0, 0, 0.1);
+  --radius: 16px;
+  --radius-sm: 10px;
+  --transition: 0.2s ease;
+}
+
+/* ---- Mise en page globale ---- */
+.panier-page {
+  width: 100%;
+  min-height: 100vh;
+  background-color: #f9fafb;
+  font-family: "Segoe UI", system-ui, sans-serif;
+}
+
+.panier-main {
+  max-width: 80vw;
+  margin: 0 auto;
+  padding: 40px 24px 80px;
+}
+
+.panier-content {
+  width: 100%;
+  display: flex;
+  justify-content: space-evenly;
+  align-items: flex-start;
+  gap: clamp(1rem, 3vw, 1.5rem);
+}
+
+/* ---- Colonne gauche ---- */
+.panier-articles {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  max-width: 800px;
+}
+
+.panier-titre {
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: var(--black);
+  margin: 0 0 4px;
+}
+
+.panier-sous-titre {
+  font-size: 1.15rem;
+  font-weight: 600;
+  color: var(--black);
+  margin: 0 0 20px;
+}
+
+/* ---- Groupe de date ---- */
+.panier-groupe {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+.panier-date-label {
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--grey);
+  text-transform: capitalize;
+  margin: 0;
+  padding-left: 4px;
+}
+
+/* ---- Carte billet ---- */
+.panier-card {
+  background: var(--white);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-card);
+  border: 1px solid var(--border);
+  overflow: hidden;
+  transition: box-shadow var(--transition);
+}
+
+.panier-card:hover {
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.11);
+}
+
+.panier-card-row {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 18px 22px;
+}
+
+/* ---- Avatar ---- */
+.panier-avatar {
+  width: 46px;
+  height: 46px;
+  border-radius: var(--radius-sm);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: var(--white);
+  flex-shrink: 0;
+  letter-spacing: 0;
+}
+
+/* ---- Train ID ---- */
+.panier-train-id {
+  font-size: 0.82rem;
+  color: var(--grey);
+  font-weight: 500;
+  min-width: 52px;
+  flex-shrink: 0;
+}
+
+/* ---- Trajet ---- */
+.panier-trajet {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex: 1;
+}
+
+.panier-station {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  min-width: 70px;
+}
+
+.panier-heure {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--black);
+  line-height: 1;
+}
+
+.panier-gare {
+  font-size: 0.75rem;
+  color: var(--grey);
+  text-align: center;
+  white-space: nowrap;
+}
+
+.panier-ligne {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex: 1;
+}
+
+.panier-tiret {
+  flex: 1;
+  height: 1.5px;
+  background-color: var(--border);
+  border-radius: 2px;
+}
+
+.panier-icon-train {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  color: var(--grey);
+  flex-shrink: 0;
+}
+
+.panier-duree {
+  font-size: 0.68rem;
+  color: var(--grey);
+  white-space: nowrap;
+}
+
+/* ---- Prix ---- */
+.panier-prix {
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--black);
+  min-width: 72px;
+  text-align: right;
+  flex-shrink: 0;
+}
+
+/* ---- Boutons d'action ---- */
+.panier-actions {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-shrink: 0;
+}
+
+.panier-toggle,
+.panier-delete {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 6px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background var(--transition), color var(--transition);
+  color: var(--grey);
+}
+
+.panier-toggle:hover {
+  background-color: var(--grey-light);
+  color: var(--black);
+}
+
+.panier-delete:hover {
+  background-color: #fef2f2;
+  color: #dc2626;
+}
+
+/* ---- Options dépliables ---- */
+.panier-options {
+  border-top: 1px solid var(--border);
+  padding: 14px 22px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  background-color: #fafafa;
+  animation: slideDown 0.2s ease;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.panier-option-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 0.88rem;
+  color: #374151;
+}
+
+.panier-option-icon {
+  font-size: 1rem;
+  flex-shrink: 0;
+}
+
+.panier-option-nom {
+  flex: 1;
+}
+
+.panier-option-prix {
+  font-weight: 600;
+  color: var(--grey);
+}
+
+/* ---- État vide ---- */
+.panier-vide {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 18px;
+  padding: 64px 24px;
+  color: var(--grey);
+  text-align: center;
+}
+
+.panier-vide p {
+  font-size: 1rem;
+  margin: 0;
+}
+
+/* ---- Chargement ---- */
+.panier-loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  padding: 48px;
+  color: var(--grey);
+}
+
+.panier-spinner {
+  width: 36px;
+  height: 36px;
+  border: 3px solid var(--border);
+  border-top-color: var(--main-green);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.panier-recap {
+  background: var(--white);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-aside);
+  border: 1px solid var(--border);
+  padding: 32px 28px;
+  position: sticky;
+  top: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  max-width: 500px;
+}
+
+.recap-titre {
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: var(--black);
+  margin: 0 0 24px;
+}
+
+/* ---- Lignes de prix ---- */
+.recap-lignes {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.recap-ligne {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.92rem;
+  color: #4b5563;
+}
+
+.recap-tva {
+  color: var(--grey);
+  font-size: 0.85rem;
+}
+
+.recap-montant {
+  font-weight: 600;
+  color: var(--black);
+}
+
+.recap-divider {
+  border: none;
+  border-top: 1px solid var(--border);
+  margin: 0 0 20px;
+}
+
+.recap-ttc {
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--black);
+  margin-bottom: 28px;
+}
+
+.recap-montant--ttc {
+  font-size: 1.3rem;
+  font-weight: 800;
+  color: var(--black);
+}
+
+/* ---- Détail article par article ---- */
+.recap-detail {
+  display: flex;
+  flex-direction: column;
+  gap: 1vh;
+  margin-bottom: 20px;
+}
+
+.recap-article {
+  padding: 14px 0;
+}
+
+/* En-tête cliquable (toggle) */
+.recap-article-toggle {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  width: 100%;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  text-align: left;
+  transition: opacity var(--transition);
+}
+
+.recap-article-toggle:hover .recap-article-trajet {
+  color: var(--main-green);
+  transition: color var(--transition);
+}
+
+.recap-article-toggle-right {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-shrink: 0;
+  color: var(--grey);
+}
+
+.recap-article-sous-total-preview {
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: var(--black);
+}
+
+.recap-article-header {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  max-width: 65%;
+}
+
+/* Zone déroulée */
+.recap-article-detail {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  margin-top: 10px;
+  padding: 12px 14px;
+  background: var(--grey-light);
+  border-radius: var(--radius-sm);
+  animation: slideDown 0.18s ease;
+}
+
+.recap-article-num {
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+  color: var(--main-green);
+}
+
+.recap-article-trajet {
+  font: bold clamp(0.9rem, 1vw, 1rem) "Darker-grotesque";
+  color: var(--black);
+}
+
+.recap-article-ligne {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.83rem;
+  color: #4b5563;
+}
+
+.recap-article-option {
+  color: var(--grey);
+  font-size: 0.8rem;
+  padding-left: 4px;
+}
+
+.recap-article-sous-total {
+  font-weight: 700;
+  color: var(--black);
+  font-size: 0.87rem;
+  margin-top: 2px;
+  padding-top: 7px;
+  border-top: 1px dashed var(--border);
+}
+
+.recap-article-sep {
+  margin-top: 0.5rem;
+  border: none;
+  border-top: 1px solid var(--border);
+}
+
+
+/* ---- Modes de paiement — images ---- */
+.recap-paiement {
+  margin-bottom: 22px;
+}
+
+.recap-paiement-titre {
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--black);
+  margin: 0 0 12px;
+  text-align: center;
+}
+
+.recap-paiement-logos {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.paiement-img {
+  height: 24px;
+  width: auto;
+  object-fit: contain;
+  filter: grayscale(10%);
+  transition: filter var(--transition), transform var(--transition);
+  border-radius: 4px;
+}
+
+.paiement-img:hover {
+  filter: grayscale(0%);
+  transform: scale(1.07);
+}
+
+/* ---- Bouton Ajouter ---- */
+.recap-ajouter-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+  padding: 12px;
+  border: 2px solid var(--main-green);
+  border-radius: 10px;
+  background: transparent;
+  color: var(--main-green);
+  font-size: 0.92rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background var(--transition), color var(--transition);
+}
+
+.recap-ajouter-btn:hover {
+  background: var(--green-light);
+}
+
+/* ========================================
+   Responsive
+   ======================================== */
+@media (max-width: 900px) {
+  .panier-content {
+    grid-template-columns: 1fr;
+  }
+
+  .panier-recap {
+    position: static;
+  }
+}
+
+@media (max-width: 600px) {
+  .panier-main {
+    padding: 24px 16px 60px;
+  }
+
+  .panier-card-row {
+    flex-wrap: wrap;
+    gap: 12px;
+    padding: 14px 16px;
+  }
+
+  .panier-trajet {
+    order: 3;
+    width: 100%;
+    flex: unset;
+  }
+
+  .panier-prix {
+    order: 4;
+    margin-left: auto;
+  }
+
+  .panier-actions {
+    order: 5;
+  }
+
+  .panier-titre {
+    font-size: 1.4rem;
+  }
+}

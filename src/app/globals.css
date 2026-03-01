@@ -23,6 +23,11 @@
   src: url("/fonts/inter/Inter-VariableFont.ttf");
 }
 
+@font-face {
+  font-family: "Darker-grotesque";
+  src: url("/fonts/inter/Inter-VariableFont.ttf");
+}
+
 /* GLOBAL STYLES */
 
 * {
