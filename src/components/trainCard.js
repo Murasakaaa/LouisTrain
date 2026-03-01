@@ -1,10 +1,11 @@
 "use client";
 import React, { useState } from "react";
-import { Train, ChevronUp, ChevronDown, X, Calendar } from "lucide-react"; // Ajout de l'icône Calendar
+import { Train, ChevronUp, ChevronDown, X, Calendar } from "lucide-react";
 import Button from "./commons/Button";
 import "../style/components/trainCard.css";
+import { useRouter } from "next/navigation";
 
-// calcul de la durée du trajet
+// Calcul de la durée du trajet
 const calculerDuree = (debut, fin) => {
   const [h1, m1] = debut.split(":").map(Number);
   const [h2, m2] = fin.split(":").map(Number);
@@ -29,11 +30,12 @@ export default function TrainCard({
   prix,
   optionsDispo,
 }) {
+  const router = useRouter();
   const [isOpen, setIsOpen] = useState(false);
   const [showDropdown, setShowDropdown] = useState(false);
   const [selectedOptions, setSelectedOptions] = useState([]);
 
-  // formattage de la date
+  // Formattage de la date
   const dateObjet = new Date(date);
   const dateFormatee = dateObjet.toLocaleDateString("fr-FR", {
     day: "numeric",
@@ -41,10 +43,9 @@ export default function TrainCard({
     year: "numeric",
   });
 
-
   const duree = calculerDuree(heureD, heureA);
 
-  // ajouter les options sélectionnée dans l'array
+  // Ajouter une option sélectionnée dans l'array
   const toggleOption = (option) => {
     if (!selectedOptions.find((o) => o.nom === option.nom)) {
       setSelectedOptions([...selectedOptions, option]);
@@ -52,9 +53,36 @@ export default function TrainCard({
     setShowDropdown(false);
   };
 
-  // supprimer une option
+  // Supprimer une option
   const removeOption = (optionNom) => {
     setSelectedOptions(selectedOptions.filter((o) => o.nom !== optionNom));
+  };
+
+  // Ajouter au panier et rediriger
+  const handleReserver = () => {
+    const cartItem = {
+      // Identifiant unique dans le panier (combinaison billet + timestamp)
+      cartId: `${trainID}_${date}_${Date.now()}`,
+      trainID,
+      gareD,
+      gareA,
+      heureD,
+      heureA,
+      date,
+      prix,
+      selectedOptions,
+    };
+
+    // Récupérer le panier existant depuis le localStorage
+    const panierActuel = localStorage.getItem("panier");
+    const panier = panierActuel ? JSON.parse(panierActuel) : [];
+
+    // Ajouter le nouvel article
+    panier.push(cartItem);
+    localStorage.setItem("panier", JSON.stringify(panier));
+
+    // Redirection vers la page panier
+    router.push("/panier");
   };
 
   return (
@@ -144,8 +172,8 @@ export default function TrainCard({
             </div>
 
             <Button
-              text="Choisir ma place"
-              onClick={() => console.log(selectedOptions)}
+              text="Réserver ce billet"
+              onClick={handleReserver}
             />
           </div>
         </div>
