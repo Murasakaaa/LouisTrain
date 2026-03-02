@@ -1,5 +1,6 @@
 "use client";
 import React, { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
 import "../../style/paiement.css";
 import "../../style/HomePage.css";
 import Button from "../../components/commons/Button";
@@ -7,6 +8,7 @@ import Input from "../../components/commons/Input";
 import { ChevronDown, ChevronUp } from "lucide-react";
 
 export default function Paiement() {
+  const router = useRouter();
   const [panier, setPanier] = useState([]);
   const [isLoaded, setIsLoaded] = useState(false);
   const [expandedRecap, setExpandedRecap] = useState({});
@@ -128,9 +130,10 @@ export default function Paiement() {
       },
     }));
 
-    const res = await fetch("/api/client/reservation", {
+    const res = await fetch("/api/client/current", {
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
+      credentials: "include",
       body: JSON.stringify({ reservations }),
     });
 

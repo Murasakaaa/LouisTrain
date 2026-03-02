@@ -38,3 +38,39 @@ export async function GET() {
     return NextResponse.json({ user: null }, { status: 500 });
   }
 }
+
+export async function PATCH(req) {
+  try {
+    const cookieStore = await cookies();
+    const sessionCookie = cookieStore.get("session")?.value;
+
+    if (!sessionCookie) {
+      return NextResponse.json({ message: "Non authentifié" }, { status: 401 });
+    }
+
+    const payload = await decrypt(sessionCookie);
+    if (!payload?.userId) {
+      return NextResponse.json({ message: "Non authentifié" }, { status: 401 });
+    }
+
+    const { reservations } = await req.json();
+
+    if (!reservations || !Array.isArray(reservations)) {
+      return NextResponse.json({ message: "Données invalides" }, { status: 400 });
+    }
+
+    await connectDB();
+
+    await Client.findByIdAndUpdate(payload.userId, {
+      $push: {
+        reservations: { $each: reservations },
+      },
+    });
+
+    return NextResponse.json({ message: "Réservations ajoutées" }, { status: 200 });
+
+  } catch (error) {
+    console.error("Erreur PATCH /api/client/current :", error);
+    return NextResponse.json({ message: "Erreur serveur" }, { status: 500 });
+  }
+}
