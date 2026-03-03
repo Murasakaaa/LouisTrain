@@ -22,24 +22,22 @@
 
 /* ---- Mise en page globale ---- */
 .panier-page {
-  width: 100%;
   min-height: 100vh;
   background-color: #f9fafb;
-  font-family: "Segoe UI", system-ui, sans-serif;
+  overflow-x: hidden;
 }
 
 .panier-main {
-  max-width: 80vw;
+  max-width: 1200px;
   margin: 0 auto;
   padding: 40px 24px 80px;
 }
 
 .panier-content {
-  width: 100%;
-  display: flex;
-  justify-content: space-evenly;
+  display: grid;
+  grid-template-columns: 1fr 340px;
+  gap: 40px;
   align-items: flex-start;
-  gap: clamp(1rem, 3vw, 1.5rem);
 }
 
 /* ---- Colonne gauche ---- */
@@ -47,7 +45,6 @@
   display: flex;
   flex-direction: column;
   gap: 8px;
-  max-width: 800px;
 }
 
 .panier-titre {
@@ -58,7 +55,7 @@
 }
 
 .panier-sous-titre {
-  font-size: 1.15rem;
+  font-size: clamp(1rem, 3vw, 1.5rem);
   font-weight: 600;
   color: var(--black);
   margin: 0 0 20px;
@@ -114,16 +111,43 @@
   font-weight: 700;
   color: var(--white);
   flex-shrink: 0;
-  letter-spacing: 0;
 }
 
-/* ---- Train ID ---- */
+/* ---- Train meta : ID + badge sens ---- */
+.panier-train-meta {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 5px;
+  flex-shrink: 0;
+  min-width: 60px;
+}
+
 .panier-train-id {
   font-size: 0.82rem;
   color: var(--grey);
   font-weight: 500;
-  min-width: 52px;
+}
+
+/* ---- Badge sens (carte gauche) ---- */
+.panier-sens-badge {
+  font-size: 0.65rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  padding: 2px 7px;
+  border-radius: 20px;
   flex-shrink: 0;
+}
+
+.panier-sens-badge.aller {
+  background-color: var(--green-light);
+  color: var(--main-green);
+}
+
+.panier-sens-badge.retour {
+  background-color: #eff6ff;
+  color: #2563eb;
 }
 
 /* ---- Trajet ---- */
@@ -239,14 +263,8 @@
 }
 
 @keyframes slideDown {
-  from {
-    opacity: 0;
-    transform: translateY(-6px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+  from { opacity: 0; transform: translateY(-6px); }
+  to   { opacity: 1; transform: translateY(0); }
 }
 
 .panier-option-item {
@@ -255,11 +273,6 @@
   gap: 10px;
   font-size: 0.88rem;
   color: #374151;
-}
-
-.panier-option-icon {
-  font-size: 1rem;
-  flex-shrink: 0;
 }
 
 .panier-option-nom {
@@ -310,6 +323,9 @@
   to { transform: rotate(360deg); }
 }
 
+/* ========================================
+   Colonne droite — Récapitulatif
+   ======================================== */
 .panier-recap {
   background: var(--white);
   border-radius: var(--radius);
@@ -321,7 +337,6 @@
   display: flex;
   flex-direction: column;
   gap: 0;
-  max-width: 500px;
 }
 
 .recap-titre {
@@ -329,6 +344,140 @@
   font-weight: 700;
   color: var(--black);
   margin: 0 0 24px;
+}
+
+/* ---- Détail article par article ---- */
+.recap-detail {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  margin-bottom: 20px;
+}
+
+.recap-article {
+  padding: 14px 0;
+}
+
+/* En-tête cliquable (toggle) */
+.recap-article-toggle {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  width: 100%;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  text-align: left;
+}
+
+.recap-article-toggle:hover .recap-article-trajet {
+  color: var(--main-green);
+  transition: color var(--transition);
+}
+
+.recap-article-toggle-right {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-shrink: 0;
+  color: var(--grey);
+}
+
+.recap-article-sous-total-preview {
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: var(--black);
+}
+
+.recap-article-header {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+/* Ligne du haut : numéro + badge sens */
+.recap-article-header-top {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+/* Badge sens dans le récap */
+.recap-sens-badge {
+  font-size: 0.62rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  padding: 2px 6px;
+  border-radius: 20px;
+  flex-shrink: 0;
+}
+
+.recap-sens-badge.aller {
+  background-color: var(--green-light);
+  color: var(--main-green);
+}
+
+.recap-sens-badge.retour {
+  background-color: #eff6ff;
+  color: #2563eb;
+}
+
+/* Zone déroulée */
+.recap-article-detail {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  margin-top: 10px;
+  padding: 12px 14px;
+  background: var(--grey-light);
+  border-radius: var(--radius-sm);
+  animation: slideDown 0.18s ease;
+}
+
+.recap-article-num {
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+  color: var(--main-green);
+}
+
+.recap-article-trajet {
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--black);
+}
+
+.recap-article-ligne {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.83rem;
+  color: #4b5563;
+}
+
+.recap-article-option {
+  color: var(--grey);
+  font-size: 0.8rem;
+  padding-left: 4px;
+}
+
+.recap-article-sous-total {
+  font-weight: 700;
+  color: var(--black);
+  font-size: 0.87rem;
+  margin-top: 2px;
+  padding-top: 7px;
+  border-top: 1px dashed var(--border);
+}
+
+.recap-article-sep {
+  border: none;
+  border-top: 1px solid var(--border);
+  margin: 0;
 }
 
 /* ---- Lignes de prix ---- */
@@ -375,114 +524,6 @@
   font-weight: 800;
   color: var(--black);
 }
-
-/* ---- Détail article par article ---- */
-.recap-detail {
-  display: flex;
-  flex-direction: column;
-  gap: 1vh;
-  margin-bottom: 20px;
-}
-
-.recap-article {
-  padding: 14px 0;
-}
-
-/* En-tête cliquable (toggle) */
-.recap-article-toggle {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 8px;
-  width: 100%;
-  background: none;
-  border: none;
-  cursor: pointer;
-  padding: 0;
-  text-align: left;
-  transition: opacity var(--transition);
-}
-
-.recap-article-toggle:hover .recap-article-trajet {
-  color: var(--main-green);
-  transition: color var(--transition);
-}
-
-.recap-article-toggle-right {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  flex-shrink: 0;
-  color: var(--grey);
-}
-
-.recap-article-sous-total-preview {
-  font-size: 0.9rem;
-  font-weight: 700;
-  color: var(--black);
-}
-
-.recap-article-header {
-  display: flex;
-  flex-direction: column;
-  gap: 3px;
-  max-width: 65%;
-}
-
-/* Zone déroulée */
-.recap-article-detail {
-  display: flex;
-  flex-direction: column;
-  gap: 7px;
-  margin-top: 10px;
-  padding: 12px 14px;
-  background: var(--grey-light);
-  border-radius: var(--radius-sm);
-  animation: slideDown 0.18s ease;
-}
-
-.recap-article-num {
-  font-size: 0.7rem;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.6px;
-  color: var(--main-green);
-}
-
-.recap-article-trajet {
-  font: bold clamp(0.9rem, 1vw, 1rem) "Darker-grotesque";
-  color: var(--black);
-}
-
-.recap-article-ligne {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  font-size: 0.83rem;
-  color: #4b5563;
-}
-
-.recap-article-option {
-  color: var(--grey);
-  font-size: 0.8rem;
-  padding-left: 4px;
-}
-
-.recap-article-sous-total {
-  font-weight: 700;
-  color: var(--black);
-  font-size: 0.87rem;
-  margin-top: 2px;
-  padding-top: 7px;
-  border-top: 1px dashed var(--border);
-}
-
-.recap-article-sep {
-  margin-top: 0.5rem;
-  border: none;
-  border-top: 1px solid var(--border);
-}
-
 
 /* ---- Modes de paiement — images ---- */
 .recap-paiement {
@@ -548,7 +589,6 @@
   .panier-content {
     grid-template-columns: 1fr;
   }
-
   .panier-recap {
     position: static;
   }
@@ -558,28 +598,23 @@
   .panier-main {
     padding: 24px 16px 60px;
   }
-
   .panier-card-row {
     flex-wrap: wrap;
     gap: 12px;
     padding: 14px 16px;
   }
-
   .panier-trajet {
     order: 3;
     width: 100%;
     flex: unset;
   }
-
   .panier-prix {
     order: 4;
     margin-left: auto;
   }
-
   .panier-actions {
     order: 5;
   }
-
   .panier-titre {
     font-size: 1.4rem;
   }

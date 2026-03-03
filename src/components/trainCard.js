@@ -29,6 +29,7 @@ export default function TrainCard({
   nb_place_restantes,
   prix,
   optionsDispo,
+  sens = "aller",
 }) {
   const router = useRouter();
   const [isOpen, setIsOpen] = useState(false);
@@ -61,8 +62,8 @@ export default function TrainCard({
   // Ajouter au panier et rediriger
   const handleReserver = () => {
     const cartItem = {
-      // Identifiant unique dans le panier (combinaison billet + timestamp)
       cartId: `${trainID}_${date}_${Date.now()}`,
+      sens,        // ← ajout
       trainID,
       gareD,
       gareA,
@@ -73,15 +74,12 @@ export default function TrainCard({
       selectedOptions,
     };
 
-    // Récupérer le panier existant depuis le localStorage
     const panierActuel = localStorage.getItem("panier");
     const panier = panierActuel ? JSON.parse(panierActuel) : [];
 
-    // Ajouter le nouvel article
     panier.push(cartItem);
     localStorage.setItem("panier", JSON.stringify(panier));
 
-    // Redirection vers la page panier
     router.push("/panier");
   };
 
