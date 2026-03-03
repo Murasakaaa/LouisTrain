@@ -1,17 +1,30 @@
 "use client";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Button from "./commons/Button";
 import "../style/components/Navbar.css";
 import { useRouter } from "next/navigation";
 
-export default function Navbar({ isConnected, userName, isWhite }) {
+export default function Navbar({ isWhite }) {
   const router = useRouter();
+  const [user, setUser] = useState(null);
+
+  useEffect(() => {
+    fetch("/api/client/current")
+      .then((res) => res.json())
+      .then((data) => {
+        if (data?.user) setUser(data.user);
+        else setUser(null);
+      })
+      .catch(() => setUser(null));
+  }, []);
+
   const buttonConnexion = (
     <Button text="Se connecter" onClick={() => router.replace("/login")} />
   );
-  const profil = (
+
+  const profil = user && (
     <div className="navbar-profil">
-      <p>{userName}</p>
+      <p>{user.prenom} {user.nom}</p>
       <p>icon</p>
     </div>
   );
@@ -29,7 +42,7 @@ export default function Navbar({ isConnected, userName, isWhite }) {
       >
         Louis<span>Train</span>
       </h1>
-      {isConnected ? profil : buttonConnexion}
+      {user ? profil : buttonConnexion}
     </div>
   );
 }

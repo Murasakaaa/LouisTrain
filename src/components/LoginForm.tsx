@@ -20,8 +20,7 @@ export default function LoginForm({ redirectTo = "/" }) {
           <Input
             type="text"
             name="email"
-            placeholder="Adresse e-mail"
-          />
+            placeholder="Adresse e-mail" format={undefined} onChange={undefined}          />
           {state?.errors?.email && (
             <p className="errorMsg">{state.errors.email}</p>
           )}
@@ -30,8 +29,7 @@ export default function LoginForm({ redirectTo = "/" }) {
           <Input
             type="password"
             name="password"
-            placeholder="Mot de passe"
-          />
+            placeholder="Mot de passe" format={undefined} onChange={undefined}          />
           {state?.errors?.password && (
             <p className="error-message" style={{ color: "red" }}>
               {state.errors.password}
