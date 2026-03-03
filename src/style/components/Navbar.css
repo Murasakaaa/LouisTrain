@@ -19,8 +19,26 @@
   color: var(--main-green);
 }
 
-.navbar .navbar-profil {
+.navbar-profil {
   display: flex;
   align-items: center;
   gap: 10px;
+  background-color: var(--main-green);
+}
+
+.navbar-profil {
+  padding: 0 1rem;
+  border-radius: 1rem;
+  color: var(--white);
+  font-weight: bold;
+}
+
+.logout {
+  padding: 0.5rem;
+  border-radius: 0.6rem;
+}
+
+.logout:hover {
+  background-color: red;
+  cursor: pointer;
 }

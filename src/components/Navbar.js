@@ -1,12 +1,18 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import Button from "./commons/Button";
 import "../style/components/Navbar.css";
-import { useRouter } from "next/navigation";
+import { useRouter, usePathname } from "next/navigation";
+import { LogOut } from "lucide-react";
+import { logout } from "../app/login/action";
+import { useActionState } from "react";
 
 export default function Navbar({ isWhite }) {
   const router = useRouter();
+
   const [user, setUser] = useState(null);
+  const [state, logoutAction] = useActionState(logout, undefined);
+  const pathname = usePathname();
 
   useEffect(() => {
     fetch("/api/client/current")
@@ -16,7 +22,7 @@ export default function Navbar({ isWhite }) {
         else setUser(null);
       })
       .catch(() => setUser(null));
-  }, []);
+  }, [pathname]);
 
   const buttonConnexion = (
     <Button text="Se connecter" onClick={() => router.replace("/login")} />
@@ -24,8 +30,14 @@ export default function Navbar({ isWhite }) {
 
   const profil = user && (
     <div className="navbar-profil">
-      <p>{user.prenom} {user.nom}</p>
-      <p>icon</p>
+      <p>
+        {user.prenom} {user.nom}
+      </p>
+      <form action={logoutAction} style={{ display: "inline" }}>
+        <button type="submit" className="logout">
+          <LogOut />
+        </button>
+      </form>
     </div>
   );
 

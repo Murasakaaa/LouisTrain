@@ -4,7 +4,7 @@ import Button from "./commons/Button.js";
 import Input from "./commons/Input.js";
 import { useFormStatus } from "react-dom";
 import "../style/components/LoginForm.css";
-import { useActionState, useState } from "react";
+import { useActionState } from "react";
 import { login } from "../app/login/action";
 
 export default function LoginForm({ redirectTo = "/" }) {
@@ -20,7 +20,10 @@ export default function LoginForm({ redirectTo = "/" }) {
           <Input
             type="text"
             name="email"
-            placeholder="Adresse e-mail" format={undefined} onChange={undefined}          />
+            placeholder="Adresse e-mail"
+            format={undefined}
+            onChange={undefined}
+          />
           {state?.errors?.email && (
             <p className="errorMsg">{state.errors.email}</p>
           )}
@@ -29,7 +32,10 @@ export default function LoginForm({ redirectTo = "/" }) {
           <Input
             type="password"
             name="password"
-            placeholder="Mot de passe" format={undefined} onChange={undefined}          />
+            placeholder="Mot de passe"
+            format={undefined}
+            onChange={undefined}
+          />
           {state?.errors?.password && (
             <p className="error-message" style={{ color: "red" }}>
               {state.errors.password}
