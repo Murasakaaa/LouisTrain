@@ -7,11 +7,12 @@ import "../style/components/LoginForm.css";
 import { useActionState, useState } from "react";
 import { login } from "../app/login/action";
 
-export default function LoginForm() {
+export default function LoginForm({ redirectTo = "/" }) {
   const [state, loginAction] = useActionState(login, undefined);
 
   return (
     <form action={loginAction} className="login-form-container">
+      <input type="hidden" name="redirectTo" value={redirectTo} />
       <h1 className="title">Vous possédez déjà un compte ?</h1>
 
       <div className="input-container">

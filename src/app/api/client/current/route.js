@@ -1,4 +1,4 @@
-import { connectDB } from "@/lib/db.ts";
+import { connectDB } from "@/lib/db";
 import Client from "@/models/Client";
 import { decrypt } from "@/lib/session";
 import { cookies } from "next/headers";
@@ -34,7 +34,7 @@ export async function GET() {
       },
     });
   } catch (error) {
-    console.error("Erreur /api/user/me :", error);
+    console.error("Erreur GET /api/client/current :", error);
     return NextResponse.json({ user: null }, { status: 500 });
   }
 }
@@ -54,6 +54,7 @@ export async function PATCH(req) {
     }
 
     const { reservations } = await req.json();
+    console.log("Reservations reçues :", JSON.stringify(reservations, null, 2));
 
     if (!reservations || !Array.isArray(reservations)) {
       return NextResponse.json({ message: "Données invalides" }, { status: 400 });
@@ -70,7 +71,8 @@ export async function PATCH(req) {
     return NextResponse.json({ message: "Réservations ajoutées" }, { status: 200 });
 
   } catch (error) {
-    console.error("Erreur PATCH /api/client/current :", error);
+    console.error("Erreur PATCH /api/client/current :", error.message);
+    console.error("Détail validation :", JSON.stringify(error.errors, null, 2));
     return NextResponse.json({ message: "Erreur serveur" }, { status: 500 });
   }
 }

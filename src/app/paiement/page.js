@@ -95,55 +95,71 @@ export default function Paiement() {
     return newErrors;
   };
 
-  const handleButtonPay = async () => {
-    const newErrors = validate();
-    if (Object.keys(newErrors).length > 0) {
-      setErrors(newErrors);
-      return;
-    }
+  const genererIdResa = () => {
+    const now = new Date();
+    const date = now.toISOString().slice(0, 10).replace(/-/g, "");
+    const uuid = crypto.randomUUID().split("-")[0];
+    return `RES${date}${uuid}`; 
+  };
 
-    const reservations = panier.map((item) => ({
+  const handleButtonPay = async () => {
+  const newErrors = validate();
+  if (Object.keys(newErrors).length > 0) {
+    setErrors(newErrors);
+    return;
+  }
+
+  const reservations = panier.map((item) => {
+    const optionsPropres = (item.selectedOptions || []).map(opt => ({
+      nom: opt.nom,
+      prix: parseFloat(opt.prix?.$numberDecimal || opt.prix || 0),
+    }));
+
+    const prixOptions = optionsPropres.reduce((s, o) => s + o.prix, 0);
+    const prixBillet = parseFloat(item.prix);
+
+    return {
+      _id: genererIdResa(),
       date_reservation: new Date().toISOString(),
       statut: "confirmée",
       reduction_appliquee: reduction,
       prix_total: totalFinal,
       voyage: [{
         num_billet: item.cartId,
+        sens: item.sens || "aller",
+        depart_id: item.departId || "",
         gare_depart: item.gareD,
         gare_arrivee: item.gareA,
         date: item.date,
         heure_depart: item.heureD,
         heure_arrivee: item.heureA,
-        options_choisies: item.selectedOptions || [],
-        prix_billet: parseFloat(item.prix),
-        prix_options: (item.selectedOptions || []).reduce(
-          (s, o) => s + parseFloat(o.prix?.$numberDecimal || o.prix || 0), 0
-        ),
-        prix_ttc: parseFloat(item.prix) + (item.selectedOptions || []).reduce(
-          (s, o) => s + parseFloat(o.prix?.$numberDecimal || o.prix || 0), 0
-        ),
+        options_choisies: optionsPropres,
+        prix_billet: prixBillet,
+        prix_options: prixOptions,
+        prix_ttc: prixBillet + prixOptions,
       }],
       paiement: {
         titulaire_cb: `${form.prenom} ${form.nom}`,
         num_cb_masque: `****${form.numero.replace(/\s/g, "").slice(-4)}`,
+        num_autorisation: Math.random().toString(36).substring(2, 8).toUpperCase(),
         date_expiration: form.expiration,
       },
-    }));
+    };
+  });
 
-    const res = await fetch("/api/client/current", {
-      method: "PATCH",
-      headers: { "Content-Type": "application/json" },
-      credentials: "include",
-      body: JSON.stringify({ reservations }),
-    });
+  const res = await fetch("/api/client/current", {
+    method: "PATCH",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ reservations }),
+  });
 
-    if (res.ok) {
-      localStorage.removeItem("panier"); 
-      router.push("/confirmation"); 
-    } else {
-      console.error("Erreur lors de la réservation");
-    }
-  };
+  if (res.ok) {
+    localStorage.removeItem("panier");
+    router.push("/confirmation");
+  } else {
+    console.error("Erreur lors de la réservation");
+  }
+};
 
   return (
     <div className="paiement-container">

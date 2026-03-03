@@ -62,7 +62,8 @@ export async function login(prevState: any, formData: FormData) {
   }
 
   // redirection (à changer en mettant la dernière page d'où le client vient , pour l'instant cest la page d'accueil)
-  redirect("/");
+  const redirectTo = formData.get("redirectTo") as string || "/";
+  redirect(redirectTo);
 }
 
 // suppression de la session et redirection

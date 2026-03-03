@@ -74,269 +74,279 @@ export default function PanierPage() {
     setExpandedItems((prev) => ({ ...prev, [cartId]: !prev[cartId] }));
   };
 
-  const prixHT = panier.reduce((acc, item) => {
-    const base = parseFloat(item.prix) || 0;
-    const options = (item.selectedOptions || []).reduce(
-      (s, o) => s + parseFloat(o.prix?.$numberDecimal || o.prix || 0), 0
-    );
-    return acc + base + options;
-  }, 0);
-
-  const TVA_TAUX = 20;
-  const montantTVA = prixHT * (TVA_TAUX / 100);
-  const prixTTC = prixHT + montantTVA;
-
-  const panierParDate = panier.reduce((acc, item) => {
-    const dateKey = formaterDate(item.date);
-    if (!acc[dateKey]) acc[dateKey] = [];
-    acc[dateKey].push(item);
-    return acc;
-  }, {});
-
-  const handleValiderCommande = () => {
-    console.log("Validation de la commande :", panier);
-  };
-
-  const handleAjouterArticle = () => {
-    router.push("/calendrier");
-  };
-
-  return (
-    <div className="panier-page">
-      <main className="panier-main">
-        <div className="panier-content">
-
-          {/* ---- Colonne gauche ---- */}
-          <div className="panier-articles">
-            <h1 className="panier-titre">Récapitulatif de votre panier :</h1>
-            <h2 className="panier-sous-titre">Vos articles ({panier.length})</h2>
-
-            {!isLoaded ? (
-              <div className="panier-loading">
-                <div className="panier-spinner"></div>
-                <p>Chargement de votre panier…</p>
-              </div>
-            ) : panier.length === 0 ? (
-              <div className="panier-vide">
-                <ShoppingCart size={48} strokeWidth={1.2} />
-                <p>Votre panier est vide.</p>
-                <Button text="Trouver un billet" onClick={handleAjouterArticle} />
-              </div>
-            ) : (
-              Object.entries(panierParDate).map(([dateLabel, items]) => (
-                <div key={dateLabel} className="panier-groupe">
-                  <p className="panier-date-label">{dateLabel}</p>
-
-                  {items.map((item) => {
-                    const letter = item.trainID?.charAt(0)?.toUpperCase() || "T";
-                    const duree = calculerDuree(item.heureD, item.heureA);
-                    const isExpanded = expandedItems[item.cartId];
-                    const hasOptions = item.selectedOptions?.length > 0;
-
-                    return (
-                      <div key={item.cartId} className="panier-card">
-                        <div className="panier-card-row">
-
-                          {/* Avatar */}
-                          <div
-                            className="panier-avatar"
-                            style={{ backgroundColor: getAvatarColor(letter) }}
-                          >
-                            {letter}
+  // Calcul du total (sans TVA)
+    const prixTotal = panier.reduce((acc, item) => {
+      const base = parseFloat(item.prix) || 0;
+      const options = (item.selectedOptions || []).reduce(
+        (s, o) => s + parseFloat(o.prix?.$numberDecimal || o.prix || 0), 0
+      );
+      return acc + base + options;
+    }, 0);
+  
+    const panierParDate = panier.reduce((acc, item) => {
+      const dateKey = formaterDate(item.date);
+      if (!acc[dateKey]) acc[dateKey] = [];
+      acc[dateKey].push(item);
+      return acc;
+    }, {});
+  
+    const handleValiderCommande = async () => {
+      const res = await fetch("/api/client/current");
+      if (!res.ok) {
+        router.push("/login?redirectTo=/paiement");
+        return;
+      }
+      router.push("/paiement");
+    };
+  
+    const handleAjouterArticle = () => {
+      router.push("/calendrier");
+    };
+  
+    return (
+      <div className="panier-page">
+        <Navbar isConnected={false} isWhite={false} />
+  
+        <main className="panier-main">
+          <div className="panier-content">
+  
+            {/* ---- Colonne gauche ---- */}
+            <div className="panier-articles">
+              <h1 className="panier-titre">Récapitulatif de votre panier :</h1>
+              <h2 className="panier-sous-titre">Vos articles ({panier.length})</h2>
+  
+              {!isLoaded ? (
+                <div className="panier-loading">
+                  <div className="panier-spinner"></div>
+                  <p>Chargement de votre panier…</p>
+                </div>
+              ) : panier.length === 0 ? (
+                <div className="panier-vide">
+                  <ShoppingCart size={48} strokeWidth={1.2} />
+                  <p>Votre panier est vide.</p>
+                  <Button text="Trouver un billet" onClick={handleAjouterArticle} />
+                </div>
+              ) : (
+                Object.entries(panierParDate).map(([dateLabel, items]) => (
+                  <div key={dateLabel} className="panier-groupe">
+                    <p className="panier-date-label">{dateLabel}</p>
+  
+                    {items.map((item) => {
+                      const letter = item.trainID?.charAt(0)?.toUpperCase() || "T";
+                      const duree = calculerDuree(item.heureD, item.heureA);
+                      const isExpanded = expandedItems[item.cartId];
+                      const hasOptions = item.selectedOptions?.length > 0;
+  
+                      return (
+                        <div key={item.cartId} className="panier-card">
+                          <div className="panier-card-row">
+  
+                            {/* Avatar */}
+                            <div
+                              className="panier-avatar"
+                              style={{ backgroundColor: getAvatarColor(letter) }}
+                            >
+                              {letter}
+                            </div>
+  
+                            {/* ID + badge sens */}
+                            <div className="panier-train-meta">
+                              <span className="panier-train-id">N°{item.trainID}</span>
+                              <span className={`panier-sens-badge ${item.sens === "retour" ? "retour" : "aller"}`}>
+                                {item.sens === "retour" ? "Retour" : "Aller"}
+                              </span>
+                            </div>
+  
+                            {/* Trajet */}
+                            <div className="panier-trajet">
+                              <div className="panier-station">
+                                <span className="panier-heure">{item.heureD}</span>
+                                <span className="panier-gare">{item.gareD}</span>
+                              </div>
+                              <div className="panier-ligne">
+                                <div className="panier-tiret"></div>
+                                <div className="panier-icon-train">
+                                  <Train size={16} />
+                                  <span className="panier-duree">{duree}</span>
+                                </div>
+                                <div className="panier-tiret"></div>
+                              </div>
+                              <div className="panier-station">
+                                <span className="panier-heure">{item.heureA}</span>
+                                <span className="panier-gare">{item.gareA}</span>
+                              </div>
+                            </div>
+  
+                            {/* Prix */}
+                            <span className="panier-prix">
+                              {parseFloat(item.prix).toFixed(2).replace(".", ",")}€
+                            </span>
+  
+                            {/* Boutons */}
+                            <div className="panier-actions">
+                              {hasOptions && (
+                                <button
+                                  className="panier-toggle"
+                                  onClick={() => toggleExpand(item.cartId)}
+                                  title="Voir les options"
+                                >
+                                  {isExpanded ? <ChevronUp size={20} /> : <ChevronDown size={20} />}
+                                </button>
+                              )}
+                              <button
+                                className="panier-delete"
+                                onClick={() => supprimerArticle(item.cartId)}
+                                title="Supprimer cet article"
+                              >
+                                <Trash2 size={18} />
+                              </button>
+                            </div>
                           </div>
-
-                          {/* ID + badge sens */}
-                          <div className="panier-train-meta">
-                            <span className="panier-train-id">N°{item.trainID}</span>
-                            <span className={`panier-sens-badge ${item.sens === "retour" ? "retour" : "aller"}`}>
-                              {item.sens === "retour" ? "Retour" : "Aller"}
+  
+                          {/* Options dépliables */}
+                          {isExpanded && hasOptions && (
+                            <div className="panier-options">
+                              {item.selectedOptions.map((opt, i) => (
+                                <div key={i} className="panier-option-item">
+                                  <span className="panier-option-nom">{opt.nom}</span>
+                                  <span className="panier-option-prix">
+                                    {parseFloat(opt.prix?.$numberDecimal || opt.prix).toFixed(2).replace(".", ",")}€
+                                  </span>
+                                </div>
+                              ))}
+                            </div>
+                          )}
+                        </div>
+                      );
+                    })}
+                  </div>
+                ))
+              )}
+            </div>
+  
+            {/* ---- Colonne droite ---- */}
+            {panier.length > 0 && (
+              <aside className="panier-recap">
+                <h3 className="recap-titre">Total</h3>
+  
+                {/* Détail article par article */}
+                <div className="recap-detail">
+                  {panier.map((item, idx) => {
+                    const prixBillet = parseFloat(item.prix) || 0;
+                    const prixOptions = (item.selectedOptions || []).reduce(
+                      (s, o) => s + parseFloat(o.prix?.$numberDecimal || o.prix || 0), 0
+                    );
+                    const sousTotal = prixBillet + prixOptions;
+  
+                    return (
+                      <div key={item.cartId} className="recap-article">
+  
+                        {/* En-tête cliquable */}
+                        <button
+                          className="recap-article-toggle"
+                          onClick={() => toggleRecap(item.cartId)}
+                        >
+                          <div className="recap-article-header">
+                            <div className="recap-article-header-top">
+                              <span className="recap-article-num">Article {idx + 1}</span>
+                              <span className={`recap-sens-badge ${item.sens === "retour" ? "retour" : "aller"}`}>
+                                {item.sens === "retour" ? "Retour" : "Aller"}
+                              </span>
+                            </div>
+                            <span className="recap-article-trajet">
+                              {item.gareD} → {item.gareA}
                             </span>
                           </div>
-
-                          {/* Trajet */}
-                          <div className="panier-trajet">
-                            <div className="panier-station">
-                              <span className="panier-heure">{item.heureD}</span>
-                              <span className="panier-gare">{item.gareD}</span>
-                            </div>
-                            <div className="panier-ligne">
-                              <div className="panier-tiret"></div>
-                              <div className="panier-icon-train">
-                                <Train size={16} />
-                                <span className="panier-duree">{duree}</span>
-                              </div>
-                              <div className="panier-tiret"></div>
-                            </div>
-                            <div className="panier-station">
-                              <span className="panier-heure">{item.heureA}</span>
-                              <span className="panier-gare">{item.gareA}</span>
-                            </div>
+                          <div className="recap-article-toggle-right">
+                            <span className="recap-article-sous-total-preview">
+                              {sousTotal.toFixed(2).replace(".", ",")}€
+                            </span>
+                            {expandedRecap[item.cartId]
+                              ? <ChevronUp size={14} />
+                              : <ChevronDown size={14} />
+                            }
                           </div>
-
-                          {/* Prix */}
-                          <span className="panier-prix">
-                            {parseFloat(item.prix).toFixed(2).replace(".", ",")}€
-                          </span>
-
-                          {/* Boutons */}
-                          <div className="panier-actions">
-                            {hasOptions && (
-                              <button
-                                className="panier-toggle"
-                                onClick={() => toggleExpand(item.cartId)}
-                                title="Voir les options"
-                              >
-                                {isExpanded ? <ChevronUp size={20} /> : <ChevronDown size={20} />}
-                              </button>
-                            )}
-                            <button
-                              className="panier-delete"
-                              onClick={() => supprimerArticle(item.cartId)}
-                              title="Supprimer cet article"
-                            >
-                              <Trash2 size={18} />
-                            </button>
-                          </div>
-                        </div>
-
-                        {/* Options dépliables */}
-                        {isExpanded && hasOptions && (
-                          <div className="panier-options">
-                            {item.selectedOptions.map((opt, i) => (
-                              <div key={i} className="panier-option-item">
-                                <span className="panier-option-nom">{opt.nom}</span>
-                                <span className="panier-option-prix">
-                                  {parseFloat(opt.prix?.$numberDecimal || opt.prix).toFixed(2).replace(".", ",")}€
+                        </button>
+  
+                        {/* Détail déroulable */}
+                        {expandedRecap[item.cartId] && (
+                          <div className="recap-article-detail">
+                            <div className="recap-article-ligne">
+                              <span>Billet x1</span>
+                              <span>{prixBillet.toFixed(2).replace(".", ",")}€</span>
+                            </div>
+                            {(item.selectedOptions || []).map((opt, i) => (
+                              <div key={i} className="recap-article-ligne recap-article-option">
+                                <span>{opt.nom}</span>
+                                <span>
+                                  +{parseFloat(opt.prix?.$numberDecimal || opt.prix || 0).toFixed(2).replace(".", ",")}€
                                 </span>
                               </div>
                             ))}
+                            <div className="recap-article-ligne recap-article-sous-total">
+                              <span>Sous-total</span>
+                              <span>{sousTotal.toFixed(2).replace(".", ",")}€</span>
+                            </div>
                           </div>
                         )}
+  
+                        {idx < panier.length - 1 && <hr className="recap-article-sep" />}
                       </div>
                     );
                   })}
                 </div>
-              ))
+  
+                <hr className="recap-divider" />
+  
+                {/* Prix total */}
+                <div className="recap-ligne recap-ttc">
+                  <span>Total TTC</span>
+                  <span className="recap-montant recap-montant--ttc">
+                    {prixTotal.toFixed(2).replace(".", ",")}€
+                  </span>
+                </div>
+  
+                {/* Modes de paiement */}
+                <div className="recap-paiement">
+                  <p className="recap-paiement-titre">Modes de paiement acceptés</p>
+                  <div className="recap-paiement-logos">
+                    <img
+                      src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/98/Visa_Inc._logo_%282005%E2%80%932014%29.svg/960px-Visa_Inc._logo_%282005%E2%80%932014%29.svg.png"
+                      alt="Visa"
+                      className="paiement-img"
+                    />
+                    <img
+                      src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/2a/Mastercard-logo.svg/800px-Mastercard-logo.svg.png"
+                      alt="Mastercard"
+                      className="paiement-img"
+                    />
+                    <img
+                      src="https://upload.wikimedia.org/wikipedia/commons/thumb/f/fa/American_Express_logo_%282018%29.svg/800px-American_Express_logo_%282018%29.svg.png"
+                      alt="American Express"
+                      className="paiement-img"
+                    />
+                    <img
+                      src="https://upload.wikimedia.org/wikipedia/commons/thumb/b/b5/PayPal.svg/800px-PayPal.svg.png"
+                      alt="PayPal"
+                      className="paiement-img"
+                    />
+                  </div>
+                </div>
+  
+                <Button
+                  text="Valider ma commande"
+                  onClick={handleValiderCommande}
+                  style={{ width: "100%", marginBottom: "10px" }}
+                />
+  
+                <button className="recap-ajouter-btn" onClick={handleAjouterArticle}>
+                  <Plus size={16} />
+                  Ajouter un autre article
+                </button>
+              </aside>
             )}
           </div>
-
-          {/* ---- Colonne droite ---- */}
-          {panier.length > 0 && (
-            <aside className="panier-recap">
-              <h3 className="recap-titre">Total</h3>
-
-              <div className="recap-detail">
-                {panier.map((item, idx) => {
-                  const prixBillet = parseFloat(item.prix) || 0;
-                  const prixOptions = (item.selectedOptions || []).reduce(
-                    (s, o) => s + parseFloat(o.prix?.$numberDecimal || o.prix || 0), 0
-                  );
-                  const sousTotal = prixBillet + prixOptions;
-
-                  return (
-                    <div key={item.cartId} className="recap-article">
-
-                      {/* En-tête cliquable */}
-                      <button
-                        className="recap-article-toggle"
-                        onClick={() => toggleRecap(item.cartId)}
-                      >
-                        <div className="recap-article-header">
-                          <div className="recap-article-header-top">
-                            <span className="recap-article-num">Article {idx + 1}</span>
-                            <span className={`recap-sens-badge ${item.sens === "retour" ? "retour" : "aller"}`}>
-                              {item.sens === "retour" ? "Retour" : "Aller"}
-                            </span>
-                          </div>
-                          <span className="recap-article-trajet">
-                            {item.gareD} → {item.gareA}
-                          </span>
-                        </div>
-                        <div className="recap-article-toggle-right">
-                          <span className="recap-article-sous-total-preview">
-                            {sousTotal.toFixed(2).replace(".", ",")}€
-                          </span>
-                          {expandedRecap[item.cartId]
-                            ? <ChevronUp size={14} />
-                            : <ChevronDown size={14} />
-                          }
-                        </div>
-                      </button>
-
-                      {/* Détail déroulable */}
-                      {expandedRecap[item.cartId] && (
-                        <div className="recap-article-detail">
-                          <div className="recap-article-ligne">
-                            <span>Billet x1</span>
-                            <span>{prixBillet.toFixed(2).replace(".", ",")}€</span>
-                          </div>
-                          {(item.selectedOptions || []).map((opt, i) => (
-                            <div key={i} className="recap-article-ligne recap-article-option">
-                              <span>{opt.nom}</span>
-                              <span>
-                                +{parseFloat(opt.prix?.$numberDecimal || opt.prix || 0).toFixed(2).replace(".", ",")}€
-                              </span>
-                            </div>
-                          ))}
-                          <div className="recap-article-ligne recap-article-sous-total">
-                            <span>Sous-total</span>
-                            <span>{sousTotal.toFixed(2).replace(".", ",")}€</span>
-                          </div>
-                        </div>
-                      )}
-
-                      {idx < panier.length - 1 && <hr className="recap-article-sep" />}
-                    </div>
-                  );
-                })}
-              </div>
-
-              <hr className="recap-divider" />
-
-              <div className="recap-lignes">
-                <div className="recap-ligne">
-                  <span>Prix HT</span>
-                  <span className="recap-montant">{prixHT.toFixed(2).replace(".", ",")}€</span>
-                </div>
-                <div className="recap-ligne recap-tva">
-                  <span>TVA ({TVA_TAUX}%)</span>
-                  <span className="recap-montant">+{montantTVA.toFixed(2).replace(".", ",")}€</span>
-                </div>
-              </div>
-
-              <hr className="recap-divider" />
-
-              <div className="recap-ligne recap-ttc">
-                <span>Prix TTC</span>
-                <span className="recap-montant recap-montant--ttc">
-                  {prixTTC.toFixed(2).replace(".", ",")}€
-                </span>
-              </div>
-
-              <div className="recap-paiement">
-                <p className="recap-paiement-titre">Modes de paiement acceptés</p>
-                <div className="recap-paiement-logos">
-                  <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/98/Visa_Inc._logo_%282005%E2%80%932014%29.svg/960px-Visa_Inc._logo_%282005%E2%80%932014%29.svg.png" alt="Visa" className="paiement-img" />
-                  <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/2a/Mastercard-logo.svg/800px-Mastercard-logo.svg.png" alt="Mastercard" className="paiement-img" />
-                  <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/f/fa/American_Express_logo_%282018%29.svg/800px-American_Express_logo_%282018%29.svg.png" alt="American Express" className="paiement-img" />
-                  <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/b/b5/PayPal.svg/800px-PayPal.svg.png" alt="PayPal" className="paiement-img" />
-                </div>
-              </div>
-
-              <Button
-                text="Valider ma commande"
-                onClick={handleValiderCommande}
-                style={{ width: "100%", marginBottom: "10px" }}
-              />
-
-              <button className="recap-ajouter-btn" onClick={handleAjouterArticle}>
-                <Plus size={16} />
-                Ajouter un autre article
-              </button>
-            </aside>
-          )}
-        </div>
-      </main>
-    </div>
-  );
-}
+        </main>
+      </div>
+    );
+  }
