@@ -50,3 +50,18 @@ export async function decrypt(session: string | undefined = "") {
     console.log("Failed to verify session");
   }
 }
+
+export async function getCurrentUser() {
+  const cookieStore = await cookies();
+  const session = cookieStore.get("session")?.value;
+
+  if (!session) return null;
+
+  const payload = await decrypt(session);
+
+  if (!payload?.userId) return null;
+
+  return {
+    userId: payload.userId,
+  };
+}

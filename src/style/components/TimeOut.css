@@ -21,6 +21,12 @@
   animation: show 0.3s ease-in forwards;
 }
 
+.no-transition {
+  transition: none !important;
+  visibility: hidden;
+  opacity: 0;
+}
+
 @keyframes show {
   from {
     opacity: 0;

@@ -7,31 +7,30 @@ import { LogOut } from "lucide-react";
 import { logout } from "../app/login/action";
 import { useActionState } from "react";
 
-export default function Navbar({ isWhite }) {
+export default function Navbar({ isWhite, user }) {
   const router = useRouter();
 
-  const [user, setUser] = useState(null);
+  const [userData, setUserData] = useState(null);
   const [state, logoutAction] = useActionState(logout, undefined);
-  const pathname = usePathname();
 
   useEffect(() => {
     fetch("/api/client/current")
       .then((res) => res.json())
       .then((data) => {
-        if (data?.user) setUser(data.user);
-        else setUser(null);
+        if (data?.user) setUserData(data.user);
+        else setUserData(null);
       })
-      .catch(() => setUser(null));
-  }, [pathname]);
+      .catch(() => setUserData(null));
+  }, [user]);
 
   const buttonConnexion = (
     <Button text="Se connecter" onClick={() => router.replace("/login")} />
   );
 
-  const profil = user && (
+  const profil = userData && (
     <div className="navbar-profil">
       <p>
-        {user.prenom} {user.nom}
+        {userData.prenom} {userData.nom}
       </p>
       <form action={logoutAction} style={{ display: "inline" }}>
         <button type="submit" className="logout">
@@ -54,7 +53,7 @@ export default function Navbar({ isWhite }) {
       >
         Louis<span>Train</span>
       </h1>
-      {user ? profil : buttonConnexion}
+      {userData ? profil : buttonConnexion}
     </div>
   );
 }

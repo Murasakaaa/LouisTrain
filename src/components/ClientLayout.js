@@ -1,19 +1,19 @@
 "use client";
+import { useRouter } from "next/navigation";
 
 import Navbar from "./Navbar";
 import TimeOut from "./TimeOut";
-import { deleteSession } from "../lib/session";
+import { logout } from "../app/login/action";
 
-export default function ClientLayout({ children }) {
-  const handleSuppSession = () => {
-    deleteSession();
+export default function ClientLayout({ children, user }) {
+  const handleSuppSession = async () => {
+    await logout();
   };
 
   return (
     <>
-      {/* Afficher le TimeOut que quand on est connecte et que c un client */}
-      <TimeOut onComplete={handleSuppSession} />
-      <Navbar />
+      {user && <TimeOut onComplete={handleSuppSession} />}
+      <Navbar user={user} />
       {children}
     </>
   );
