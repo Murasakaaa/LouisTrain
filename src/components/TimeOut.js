@@ -7,7 +7,7 @@ import Countdown from "react-countdown";
 import "../style/components/TimeOut.css";
 
 export default function TimeOut({ onComplete }) {
-  const idle = useIdle(10000); // 10s
+  const idle = useIdle(60000); // 1min
   const isFirstRender = useRef(true);
 
   useEffect(() => {
@@ -37,7 +37,7 @@ export default function TimeOut({ onComplete }) {
         Votre session va expirer dans{" "}
         {idle ? (
           <Countdown
-            date={Date.now() + 10000} // 3min
+            date={Date.now() + 180000} // 3min
             renderer={renderer}
             onComplete={onComplete}
           />
