@@ -104,9 +104,7 @@ export default function PanierPage() {
     };
   
     return (
-      <div className="panier-page">
-        <Navbar isConnected={false} isWhite={false} />
-  
+      <div className="panier-page">  
         <main className="panier-main">
           <div className="panier-content">
   
