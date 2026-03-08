@@ -25,14 +25,16 @@ export async function GET() {
       return NextResponse.json({ user: null }, { status: 404 });
     }
 
-    return NextResponse.json({
+   return NextResponse.json({
       user: {
         nom: client.nom,
         prenom: client.prenom,
         email: client.email,
         abonnement: client.abonnement ?? null,
+        reservations: client.reservations ?? [],
       },
     });
+
   } catch (error) {
     console.error("Erreur GET /api/client/current :", error);
     return NextResponse.json({ user: null }, { status: 500 });

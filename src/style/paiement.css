@@ -284,17 +284,17 @@
   color: var(--black);
 }
 
-@media (max-width: 1024px) {
-  .forms {
-    flex-direction: column;
-    align-items: center;
-  }
+.civilite-group {
+  display: flex;
+  gap: 1.5rem;
+}
 
-  .left-forms,
-  .paiement-container .panier-recap {
-    width: 100%;
-    max-width: 500px;
-  }
+.civilite-option {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.9rem;
+  cursor: pointer;
 }
 
 .input-error {
