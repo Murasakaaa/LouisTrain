@@ -117,9 +117,14 @@ export default function Paiement() {
 
     const prixOptions = optionsPropres.reduce((s, o) => s + o.prix, 0);
     const prixBillet = parseFloat(item.prix);
+    const id_resa= genererIdResa();
+
+    localStorage.setItem("id_resa",id_resa);
+    localStorage.setItem("name",form.prenom);
+    localStorage.setItem("mail",form.email);
 
     return {
-      _id: genererIdResa(),
+      _id: id_resa,
       date_reservation: new Date().toISOString(),
       statut: "confirmée",
       reduction_appliquee: reduction,
@@ -329,7 +334,6 @@ export default function Paiement() {
               <span>Sous-total TTC</span>
               <span className="recap-montant">{prixTTC.toFixed(2).replace(".", ",")}€</span>
             </div>
-
             {user?.abonnement && (
               <div className="recap-ligne reduction">
                 <span>Réduction adhérents</span>

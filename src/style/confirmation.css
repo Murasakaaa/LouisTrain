@@ -1,0 +1,129 @@
+.confirmation-container {
+  width: 100%;
+  min-height: 100%;
+  background-color: #fff;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 10rem 2rem 5rem;
+  box-sizing: border-box;
+  font-family: "DM Sans", sans-serif;
+}
+
+.confirmation-title {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  text-align: center;
+  margin-bottom: 2.5rem;
+}
+
+.confirmation-title h1 {
+  font-family: "DM Sans", sans-serif;
+  font-weight: 700;
+  font-size: 2.2rem;
+  color: #111;
+  margin: 0;
+}
+
+.confirmation-ref {
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: #6b7280;
+  background: #f3f4f6;
+  padding: 4px 14px;
+  border-radius: 999px;
+  border: 1px solid #e5e7eb;
+}
+
+.confirmation-card {
+  width: 100%;
+  max-width: 760px;
+  background: #fff;
+  border-radius: 16px;
+  border: 1px solid #e5e7eb;
+  padding: 3rem 3.5rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.5rem;
+  box-sizing: border-box;
+  text-align: center;
+}
+
+.confirmation-merci {
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: #111;
+  margin: 0;
+}
+
+.confirmation-sub {
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: #111;
+  margin: 0;
+}
+
+.confirmation-mail-info {
+  font-size: 0.95rem;
+  color: #4b5563;
+  margin: 0;
+  line-height: 1.6;
+}
+
+.confirmation-mail-info a {
+  color: #1ca94d;
+  text-decoration: underline;
+}
+
+.confirmation-btns {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+  justify-content: center;
+  margin-top: 0.5rem;
+}
+
+.confirmation-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 12px 28px;
+  border-radius: 999px;
+  font-family: "DM Sans", sans-serif;
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  border: none;
+  background: #1ca94d;
+  color: #fff;
+}
+
+.confirmation-btn:hover {
+  background: #168f40;
+}
+
+.confirmation-home {
+  background: none;
+  border: none;
+  font-family: "DM Sans", sans-serif;
+  font-size: 0.88rem;
+  color: #6b7280;
+  cursor: pointer;
+  text-decoration: underline;
+  padding: 0;
+  margin-top: 0.5rem;
+  transition: color 0.2s ease;
+}
+
+.confirmation-home:hover {
+  color: #111;
+}
+
+.confirmation-footer {
+  font-size: 0.95rem;
+  color: #6b7280;
+  margin: 0;
+}
