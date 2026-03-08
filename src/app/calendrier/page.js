@@ -198,6 +198,7 @@ export default function Calendar() {
               <TrainCard
                 key={item._id}
                 trainID={item.train.modele_train}
+                departId={item._id}
                 gareD={item.gare_depart}
                 gareA={item.gare_arrivee}
                 heureD={item.heure_depart}
@@ -229,6 +230,7 @@ export default function Calendar() {
                 retours.map((item) => (
                   <TrainCard
                     key={item._id}
+                    departId={item._id}
                     trainID={item.train.modele_train}
                     gareD={item.gare_depart}
                     gareA={item.gare_arrivee}

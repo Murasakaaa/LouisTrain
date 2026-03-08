@@ -5,21 +5,17 @@ import Button from "./commons/Button";
 import "../style/components/trainCard.css";
 import { useRouter } from "next/navigation";
 
-// Calcul de la durée du trajet
 const calculerDuree = (debut, fin) => {
   const [h1, m1] = debut.split(":").map(Number);
   const [h2, m2] = fin.split(":").map(Number);
-
   const totalMinutes = h2 * 60 + m2 - (h1 * 60 + m1);
   const heures = Math.floor(totalMinutes / 60);
   const minutes = totalMinutes % 60;
-
-  return minutes > 0
-    ? `${heures}h${minutes.toString().padStart(2, "0")}`
-    : `${heures}h`;
+  return minutes > 0 ? `${heures}h${minutes.toString().padStart(2, "0")}` : `${heures}h`;
 };
 
 export default function TrainCard({
+  departId,
   trainID,
   gareD,
   gareA,
@@ -36,17 +32,13 @@ export default function TrainCard({
   const [showDropdown, setShowDropdown] = useState(false);
   const [selectedOptions, setSelectedOptions] = useState([]);
 
-  // Formattage de la date
   const dateObjet = new Date(date);
   const dateFormatee = dateObjet.toLocaleDateString("fr-FR", {
-    day: "numeric",
-    month: "short",
-    year: "numeric",
+    day: "numeric", month: "short", year: "numeric",
   });
 
   const duree = calculerDuree(heureD, heureA);
 
-  // Ajouter une option sélectionnée dans l'array
   const toggleOption = (option) => {
     if (!selectedOptions.find((o) => o.nom === option.nom)) {
       setSelectedOptions([...selectedOptions, option]);
@@ -54,16 +46,15 @@ export default function TrainCard({
     setShowDropdown(false);
   };
 
-  // Supprimer une option
   const removeOption = (optionNom) => {
     setSelectedOptions(selectedOptions.filter((o) => o.nom !== optionNom));
   };
 
-  // Ajouter au panier et rediriger
   const handleReserver = () => {
     const cartItem = {
       cartId: `${trainID}_${date}_${Date.now()}`,
-      sens,        // ← ajout
+      sens,
+      departId,
       trainID,
       gareD,
       gareA,
@@ -76,10 +67,8 @@ export default function TrainCard({
 
     const panierActuel = localStorage.getItem("panier");
     const panier = panierActuel ? JSON.parse(panierActuel) : [];
-
     panier.push(cartItem);
     localStorage.setItem("panier", JSON.stringify(panier));
-
     router.push("/panier");
   };
 
@@ -99,7 +88,6 @@ export default function TrainCard({
             <span className="time">{heureD}</span>
             <span className="station-name">{gareD}</span>
           </div>
-
           <div className="journey-line">
             <div className="line"></div>
             <div className="icon-wrapper">
@@ -108,7 +96,6 @@ export default function TrainCard({
             </div>
             <div className="line"></div>
           </div>
-
           <div className="station-block">
             <span className="time">{heureA}</span>
             <span className="station-name">{gareA}</span>
@@ -129,21 +116,15 @@ export default function TrainCard({
         </button>
       </div>
 
-      {/* --- SECTION OPTIONS --- */}
       {isOpen && (
         <div className="card-options-section">
           <hr className="divider" />
           <h3>Options</h3>
-
           <div className="options-controls">
             <div className="dropdown-wrapper">
-              <div
-                className="custom-select"
-                onClick={() => setShowDropdown(!showDropdown)}
-              >
+              <div className="custom-select" onClick={() => setShowDropdown(!showDropdown)}>
                 choisissez vos options <ChevronDown size={16} />
               </div>
-
               {showDropdown && (
                 <ul className="options-menu">
                   {optionsDispo.map((opt, index) => (
@@ -155,24 +136,15 @@ export default function TrainCard({
                 </ul>
               )}
             </div>
-
             <div className="pills-container">
               {selectedOptions.map((opt, index) => (
                 <div key={index} className="selected-option-pill">
                   {opt.nom} - {opt.prix.$numberDecimal}€
-                  <X
-                    size={14}
-                    onClick={() => removeOption(opt.nom)}
-                    style={{ cursor: "pointer" }}
-                  />
+                  <X size={14} onClick={() => removeOption(opt.nom)} style={{ cursor: "pointer" }} />
                 </div>
               ))}
             </div>
-
-            <Button
-              text="Réserver ce billet"
-              onClick={handleReserver}
-            />
+            <Button text="Réserver ce billet" onClick={handleReserver} />
           </div>
         </div>
       )}
