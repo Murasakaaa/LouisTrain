@@ -1,6 +1,7 @@
 "use client";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect,useRef } from "react";
 import { useRouter } from "next/navigation";
+import QRCode from 'qrcode';
 import "../../style/confirmation.css";
 
 export default function Confirmation() {
@@ -33,25 +34,8 @@ export default function Confirmation() {
   const trunc = (str, max) =>
     (str || "").length > max ? str.substring(0, max - 1) + "..." : (str || "");
 
-  const drawFakeQR = (doc, x, y, size) => {
-    const cell = size / 10;
-    const pat  = [
-      [1,1,1,1,1,1,1,0,1,0],[1,0,0,0,0,0,1,0,0,1],
-      [1,0,1,1,1,0,1,1,0,1],[1,0,1,1,1,0,1,0,1,0],
-      [1,0,1,1,1,0,1,1,1,0],[1,0,0,0,0,0,1,0,0,1],
-      [1,1,1,1,1,1,1,0,1,0],[0,0,1,0,0,1,0,1,0,1],
-      [1,0,0,1,1,0,1,1,0,0],[0,1,0,0,1,0,0,1,1,1],
-    ];
-    doc.setFillColor(255,255,255);
-    doc.rect(x-1, y-1, size+2, size+2, "F");
-    doc.setFillColor(20,20,20);
-    pat.forEach((row,ri) => row.forEach((c,ci) => {
-      if (c) doc.rect(x+ci*cell, y+ri*cell, cell-0.2, cell-0.2, "F");
-    }));
-  };
-
   // ── BILLETS ─────────────────────────────────────────────────────────────────
-  const telechargerBillets = async () => {
+  const telechargerBillets = async (download) => {
     const { jsPDF } = await import("jspdf");
     if (!reservation?.voyage?.length) return;
 
@@ -64,8 +48,8 @@ export default function Confirmation() {
     const WHITE  = [255, 255, 255];
     const W = 210, H = 148, MID = 130;
 
-    reservation.voyage.forEach((v, i) => {
-      if (i > 0) doc.addPage();
+for (const [i, v] of reservation.voyage.entries()) {
+  if (i > 0) doc.addPage();
 
       doc.setFillColor(255,255,255);
       doc.rect(0, 0, W, H, "F");
@@ -166,16 +150,11 @@ export default function Confirmation() {
       // QR code juste sous la date
       const qrSize = 24;
       const qrX    = RX + (RW - qrSize) / 2;
-      drawFakeQR(doc, qrX, 82, qrSize);
+      const qrDataUrl = await QRCode.toDataURL(idResa);
+      doc.addImage(qrDataUrl, 'PNG', qrX, 82, qrSize, qrSize);
 
       doc.setDrawColor(...LGREY);
       doc.line(RX, 110, W-6, 110);
-
-      // Prix en bas de la colonne droite
-      doc.setTextColor(...GREY); doc.setFontSize(6.5); doc.setFont("helvetica","bold");
-      doc.text("PRIX TOTAL", RX, 117);
-      doc.setTextColor(...GREEN); doc.setFontSize(14); doc.setFont("helvetica","bold");
-      doc.text(`${parseFloat(v.prix_ttc||0).toFixed(2)} EUR`, RX, 127);
 
       // Footer vert
       doc.setFillColor(...DGREEN);
@@ -184,13 +163,15 @@ export default function Confirmation() {
       doc.text(`Ref : ${idResa}`, 8, H-7);
       doc.text("Bon voyage avec LouisTrain !", W/2, H-7, { align:"center" });
       doc.text(trunc(v.num_billet||"", 24), W-8, H-7, { align:"right" });
-    });
+    }
 
-    doc.save(`billets_${idResa}.pdf`);
+    if (download) doc.save(`billets_${idResa}.pdf`);
+    return doc.output(`datauristring`);
+
   };
 
   // ── FACTURE ──────────────────────────────────────────────────────────────────
-  const telechargerFacture = async () => {
+  const telechargerFacture = async (download) => {
     const { jsPDF } = await import("jspdf");
     const doc = new jsPDF();
     const G   = [28, 169, 77];
@@ -290,8 +271,29 @@ export default function Confirmation() {
     doc.setTextColor(...GR); doc.setFontSize(7); doc.setFont("helvetica","normal");
     doc.text("LouisTrain - Merci pour votre confiance. Bon voyage !", 105, y+7, { align:"center" });
 
-    doc.save(`facture_${idResa}.pdf`);
+    if (download) doc.save(`facture_${idResa}.pdf`);
+    return doc.output(`datauristring`);
   };
+
+  const mailEnvoye = useRef(false);
+
+  useEffect(() => {
+  if (reservation && mail && name && idResa && !mailEnvoye.current) {
+    mailEnvoye.current = true;
+
+    const send = async () => {
+      const billetsPdf = await telechargerBillets(false);
+      const facturePdf = await telechargerFacture(false);
+
+      fetch("/api/send/order", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ to: mail, name, orderNumber: idResa, billetsPdf, facturePdf }),
+      });
+    };
+    send();
+  }
+}, [reservation, mail, name, idResa]);
 
   return (
     <div className="confirmation-container">
@@ -313,10 +315,10 @@ export default function Confirmation() {
         </p>
 
         <div className="confirmation-btns">
-          <button className="confirmation-btn" onClick={telechargerBillets}>
+          <button className="confirmation-btn" onClick={() => telechargerBillets(true)}>
             Telecharger mes billets
           </button>
-          <button className="confirmation-btn confirmation-btn--outline" onClick={telechargerFacture}>
+          <button className="confirmation-btn confirmation-btn--outline" onClick={() => telechargerFacture(true)}>
             Telecharger ma facture
           </button>
         </div>
