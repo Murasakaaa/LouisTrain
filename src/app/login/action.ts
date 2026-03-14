@@ -62,8 +62,12 @@ export async function login(prevState: any, formData: FormData) {
   }
 
   // redirection (à changer en mettant la dernière page d'où le client vient , pour l'instant cest la page d'accueil)
-  const redirectTo = (formData.get("redirectTo") as string) || "/";
-  redirect(redirectTo);
+  if (emailInput === "dupont.jean@test.com") {
+    redirect("/admin");
+  } else {
+    const redirectTo = (formData.get("redirectTo") as string) || "/";
+    redirect(redirectTo);
+  }
 }
 
 // suppression de la session et redirection

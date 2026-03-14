@@ -95,6 +95,7 @@ export default function Admin() {
           ]}
           handleAction={(client) => handleRemoveAbo(client)}
           buttonAction={<Trash2 size={"15px"} color="#383838" />}
+          details={true}
         />
         <div className="admin-right">
           <Form
@@ -115,6 +116,7 @@ export default function Admin() {
               })
             }
             buttonAction={<UserPlus size={"15px"} color="#383838" />}
+            details={false}
           />
         </div>
       </div>

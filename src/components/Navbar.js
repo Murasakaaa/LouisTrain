@@ -41,7 +41,9 @@ export default function Navbar({ isWhite, user }) {
   );
 
   const handleBackHome = () => {
-    router.replace("/");
+    if (user && user.userId != "client_001") {
+      router.replace("/");
+    }
   };
 
   return (

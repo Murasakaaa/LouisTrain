@@ -1,6 +1,4 @@
 "use client";
-import { useRouter } from "next/navigation";
-
 import Navbar from "./Navbar";
 import TimeOut from "./TimeOut";
 import { logout } from "../app/login/action";
@@ -12,7 +10,9 @@ export default function ClientLayout({ children, user }) {
 
   return (
     <>
-      {user && <TimeOut onComplete={handleSuppSession} />}
+      {user && user.userId !== "client_001" && (
+        <TimeOut onComplete={handleSuppSession} />
+      )}
       <Navbar user={user} />
       {children}
     </>

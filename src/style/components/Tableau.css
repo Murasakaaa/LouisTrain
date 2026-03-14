@@ -17,17 +17,76 @@
   color: #383838;
 }
 
-.table .table-header {
+.table-header {
   background-color: #f6f6f6;
 }
-.table .table-header tr th {
+.table-header tr th {
   padding: 10px;
 }
 
-.table .table-body tr {
+.table-body tr {
   border-bottom: 1px solid #c9c9c9;
 }
-.table .table-body tr td {
+.table-body tr td {
   text-align: center;
   padding: 10px;
+}
+
+/* Popup */
+
+.bg-filter {
+  height: 100vh;
+  width: 100vw;
+  background-color: rgba(0, 0, 0, 0.329);
+  position: fixed;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.bg-filter .popup {
+  height: 70vh;
+  width: 90vw;
+  padding: 20px;
+  border-radius: 10px;
+  background-color: white;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.popup .top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.popup .bottom {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.table-wrapper {
+  width: 100%;
+  max-height: 400px;
+  overflow-y: auto;
+  border: 1px solid #c9c9c9;
+  border-radius: 4px;
+}
+
+.table-popup {
+  width: 100%;
+  border-collapse: collapse;
+  table-layout: fixed;
+  font-size: 13px;
+  color: #383838;
+}
+
+.table-popup thead th {
+  position: sticky;
+  top: 0;
+  background-color: #fff;
+  z-index: 1;
+  border-bottom: 1px solid #c9c9c9;
 }
