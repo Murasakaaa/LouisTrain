@@ -1,13 +1,10 @@
-'use client';
-import { useRouter } from "next/navigation";
+"use client";
 import LoginForm from "../../components/LoginForm";
 import "../../style/login&register.css";
-
 
 import { useSearchParams } from "next/navigation";
 
 export default function LoginPage() {
-  const route = useRouter();
   const searchParams = useSearchParams();
   const redirectTo = searchParams.get("redirectTo") || "/";
   return (

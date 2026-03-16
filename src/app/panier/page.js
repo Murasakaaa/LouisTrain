@@ -309,23 +309,18 @@ export default function PanierPage() {
                   <p className="recap-paiement-titre">Modes de paiement acceptés</p>
                   <div className="recap-paiement-logos">
                     <img
-                      src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/98/Visa_Inc._logo_%282005%E2%80%932014%29.svg/960px-Visa_Inc._logo_%282005%E2%80%932014%29.svg.png"
+                      src="/images/visa-logo.png"
                       alt="Visa"
                       className="paiement-img"
                     />
                     <img
-                      src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/2a/Mastercard-logo.svg/800px-Mastercard-logo.svg.png"
+                      src="/images/mastercard-logo.png"
                       alt="Mastercard"
                       className="paiement-img"
                     />
                     <img
-                      src="https://upload.wikimedia.org/wikipedia/commons/thumb/f/fa/American_Express_logo_%282018%29.svg/800px-American_Express_logo_%282018%29.svg.png"
+                      src="/images/american-express-logo.png"
                       alt="American Express"
-                      className="paiement-img"
-                    />
-                    <img
-                      src="https://upload.wikimedia.org/wikipedia/commons/thumb/b/b5/PayPal.svg/800px-PayPal.svg.png"
-                      alt="PayPal"
                       className="paiement-img"
                     />
                   </div>
