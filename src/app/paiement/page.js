@@ -6,13 +6,45 @@ import "../../style/HomePage.css";
 import Button from "../../components/commons/Button";
 import Input from "../../components/commons/Input";
 import { ChevronDown, ChevronUp } from "lucide-react";
+import { loadStripe } from "@stripe/stripe-js";
+import {
+  Elements,
+  CardNumberElement,
+  CardExpiryElement,
+  CardCvcElement,
+  useStripe,
+  useElements,
+} from "@stripe/react-stripe-js";
 
-export default function Paiement() {
+const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY);
+
+const STRIPE_ELEMENT_STYLE = {
+  disableLink: true,
+  style: {
+    base: {
+      fontSize: "14.4px",
+      color: "#1a1a2e",
+      fontFamily: '"DM Sans", sans-serif',
+      fontWeight: "400",
+      "::placeholder": { color: "#9ca3af" },
+    },
+    invalid: {
+      color: "#dc2626",
+    },
+  },
+};
+
+function PaiementForm() {
   const router = useRouter();
+  const stripe = useStripe();
+  const elements = useElements();
+
   const [panier, setPanier] = useState([]);
   const [isLoaded, setIsLoaded] = useState(false);
   const [expandedRecap, setExpandedRecap] = useState({});
   const [user, setUser] = useState(null);
+  const [stripeErrors, setStripeErrors] = useState({});
+  const [paymentError, setPaymentError] = useState("");
 
   const [form, setForm] = useState({
     civilite: "M.",
@@ -21,9 +53,6 @@ export default function Paiement() {
     nom: "",
     prenom: "",
     telephone: "",
-    numero: "",
-    expiration: "",
-    cvc: "",
   });
 
   const [errors, setErrors] = useState({});
@@ -61,16 +90,13 @@ export default function Paiement() {
     return acc + base + options;
   }, 0);
 
-  const reduction = user?.abonnement ? 3 : 0;
+  const reduction = user?.abonnement?.code_reduction ? 10 : 0;
   const totalFinal = prixTTC - reduction;
 
   const validate = () => {
     const newErrors = {};
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     const phoneRegex = /^(\+33|0)[1-9](\d{2}){4}$/;
-    const cardRegex = /^(\d{4} ){3}\d{4}$/;
-    const expirationRegex = /^(0[1-9]|1[0-2])\/\d{2}$/;
-    const cvcRegex = /^\d{3}$/;
 
     if (!form.email.trim()) newErrors.email = "L'email est requis";
     else if (!emailRegex.test(form.email)) newErrors.email = "Email invalide";
@@ -84,31 +110,23 @@ export default function Paiement() {
     if (!form.telephone.trim()) newErrors.telephone = "Le téléphone est requis";
     else if (!phoneRegex.test(form.telephone.replace(/\s/g, ""))) newErrors.telephone = "Numéro invalide";
 
-    if (!form.numero.trim()) newErrors.numero = "Le numéro de carte est requis";
-    else if (!cardRegex.test(form.numero)) newErrors.numero = "Numéro invalide (16 chiffres)";
-
-    if (!form.expiration.trim()) newErrors.expiration = "La date d'expiration est requise";
-    else if (!expirationRegex.test(form.expiration)) newErrors.expiration = "Format invalide (MM/AA)";
-
-    if (!form.cvc.trim()) newErrors.cvc = "Le CVC est requis";
-    else if (!cvcRegex.test(form.cvc)) newErrors.cvc = "CVC invalide (3 chiffres)";
-
     return newErrors;
   };
 
   const genererIdResa = () => {
-    const date = new Date().toISOString().slice(0, 10).replace(/-/g, "");
-    const uuid = crypto.randomUUID().split("-")[0];
-    return `RES${date}${uuid}`;
+    const uuid = crypto.randomUUID().replace(/-/g, "").slice(0, 10).toUpperCase();
+    return `RES-${uuid}`;
   };
 
   const handleButtonPay = async () => {
-    const newErrors = validate();
-    if (Object.keys(newErrors).length > 0) {
-      setErrors(newErrors);
-      return;
-    }
-
+  setPaymentError("");
+  const newErrors = validate();
+  if (Object.keys(newErrors).length > 0) {
+    setErrors(newErrors);
+    return;
+  }
+  if (!stripe || !elements) return;
+  try {
     const departIds = panier.map((item) => item.departId).filter(Boolean);
     if (departIds.length > 0) {
       const placesRes = await fetch("/api/departs", {
@@ -118,13 +136,12 @@ export default function Paiement() {
       });
       if (!placesRes.ok) {
         const err = await placesRes.json();
-        alert(err.error || "Plus de places disponibles pour un des trajets.");
+        setPaymentError(err.error || "Plus de places disponibles pour un des trajets.");
         return;
       }
     }
-
     const voyages = panier.map((item) => {
-      const optionsPropres = (item.selectedOptions || []).map(opt => ({
+      const optionsPropres = (item.selectedOptions || []).map((opt) => ({
         nom: opt.nom,
         prix: parseFloat(opt.prix?.$numberDecimal || opt.prix || 0),
       }));
@@ -145,9 +162,28 @@ export default function Paiement() {
         prix_ttc: prixBillet + prixOptions,
       };
     });
-
     const idResa = genererIdResa();
-
+    const { client_secret } = await fetch("/api/stripe", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ amount: totalFinal }),
+    }).then((r) => r.json());
+    const cardNumberElement = elements.getElement(CardNumberElement);
+    const result = await stripe.confirmCardPayment(client_secret, {
+      payment_method: {
+        card: cardNumberElement,
+        billing_details: {
+          name: `${form.prenom} ${form.nom}`,
+          email: form.email,
+        },
+      },
+    });
+    if (result.error) {
+      setPaymentError(result.error.message);
+      return;
+    }
+    const piDetails = await fetch(`/api/stripe?pi=${result.paymentIntent.id}`)
+      .then((r) => r.json());
     const reservation = {
       _id: idResa,
       date_reservation: new Date().toISOString(),
@@ -157,28 +193,39 @@ export default function Paiement() {
       voyage: voyages,
       paiement: {
         titulaire_cb: `${form.prenom} ${form.nom}`,
-        num_cb_masque: `****${form.numero.replace(/\s/g, "").slice(-4)}`,
-        num_autorisation: Math.random().toString(36).substring(2, 8).toUpperCase(),
-        date_expiration: form.expiration,
+        num_cb_masque: `****${piDetails.last4}`,
+        num_autorisation: result.paymentIntent.id,
+        date_expiration: `${piDetails.exp_month}/${piDetails.exp_year}`,
       },
     };
-
     const res = await fetch("/api/client/current", {
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ reservations: [reservation] }),
     });
-
-    if (res.ok) {
-      localStorage.setItem("id_resa", idResa);
-      localStorage.setItem("name", `${form.civilite} ${form.prenom} ${form.nom}`);
-      localStorage.setItem("mail", form.email);
-      localStorage.removeItem("panier");
-      router.push("/confirmation");
-    } else {
-      console.error("Erreur lors de la réservation");
+    if (!res.ok) {
+      setPaymentError("Erreur lors de l'enregistrement de la réservation.");
+      return;
     }
-  };
+    if (user?.abonnement?.code_reduction) {
+      await fetch("/api/client/current", {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          abonnement: { ...user.abonnement, code_reduction: "" },
+        }),
+      });
+    }
+    localStorage.setItem("id_resa", idResa);
+    localStorage.setItem("name", `${form.civilite} ${form.prenom} ${form.nom}`);
+    localStorage.setItem("mail", form.email);
+    localStorage.removeItem("panier");
+    router.push("/confirmation");
+  } catch (error) {
+    console.error("Erreur paiement :", error);
+    setPaymentError("Une erreur inattendue est survenue. Veuillez réessayer.");
+  }
+};
 
   return (
     <div className="paiement-container">
@@ -244,42 +291,68 @@ export default function Paiement() {
 
           <div className="card">
             <h3>Paiement</h3>
+
             <div className="grid-2">
               <div className="form-group">
-                <label htmlFor="nom">NOM TITULAIRE CARTE</label>
-                <Input id="nom" placeholder="Dupont" type="text" name="nom" value={form.nom} onChange={handleFormChange} />
+                <label>NOM TITULAIRE CARTE</label>
+                <Input placeholder="Dupont" type="text" name="nom" value={form.nom} onChange={handleFormChange} />
                 {errors.nom && <span className="input-error">{errors.nom}</span>}
               </div>
               <div className="form-group">
-                <label htmlFor="prenom">PRÉNOM TITULAIRE CARTE</label>
-                <Input id="prenom" placeholder="Jean" type="text" name="prenom" value={form.prenom} onChange={handleFormChange} />
+                <label>PRÉNOM TITULAIRE CARTE</label>
+                <Input placeholder="Jean" type="text" name="prenom" value={form.prenom} onChange={handleFormChange} />
                 {errors.prenom && <span className="input-error">{errors.prenom}</span>}
               </div>
             </div>
+
             <div className="form-group">
-              <label htmlFor="numero">NUMÉRO DE CARTE</label>
-              <Input id="numero" type="text" format="card" name="numero" value={form.numero} onChange={handleFormChange} />
-              {errors.numero && <span className="input-error">{errors.numero}</span>}
+              <label>NUMÉRO DE CARTE</label>
+              <div className="stripe-input-wrapper">
+                <CardNumberElement
+                  options={STRIPE_ELEMENT_STYLE}
+                  onChange={(e) =>
+                    setStripeErrors((prev) => ({ ...prev, numero: e.error?.message || "" }))
+                  }
+                />
+              </div>
+              {stripeErrors.numero && <span className="input-error">{stripeErrors.numero}</span>}
             </div>
+
             <div className="grid-2">
               <div className="form-group">
-                <label htmlFor="expiration">DATE D'EXPIRATION</label>
-                <Input id="expiration" format="expiration" type="text" name="expiration" value={form.expiration} onChange={handleFormChange} />
-                {errors.expiration && <span className="input-error">{errors.expiration}</span>}
+                <label>DATE D'EXPIRATION</label>
+                <div className="stripe-input-wrapper">
+                  <CardExpiryElement
+                    options={STRIPE_ELEMENT_STYLE}
+                    onChange={(e) =>
+                      setStripeErrors((prev) => ({ ...prev, expiration: e.error?.message || "" }))
+                    }
+                  />
+                </div>
+                {stripeErrors.expiration && <span className="input-error">{stripeErrors.expiration}</span>}
               </div>
+
               <div className="form-group">
-                <label htmlFor="cvc">CVC</label>
-                <Input id="cvc" format="cvc" type="text" name="cvc" value={form.cvc} onChange={handleFormChange} />
-                {errors.cvc && <span className="input-error">{errors.cvc}</span>}
+                <label>CVC</label>
+                <div className="stripe-input-wrapper">
+                  <CardCvcElement
+                    options={STRIPE_ELEMENT_STYLE}
+                    onChange={(e) =>
+                      setStripeErrors((prev) => ({ ...prev, cvc: e.error?.message || "" }))
+                    }
+                  />
+                </div>
+                {stripeErrors.cvc && <span className="input-error">{stripeErrors.cvc}</span>}
               </div>
             </div>
           </div>
+
         </div>
+
 
         {panier.length > 0 && (
           <aside className="panier-recap">
             <h3 className="recap-titre">Résumé de la commande</h3>
-
             {!isLoaded ? (
               <p>Chargement...</p>
             ) : (
@@ -290,7 +363,6 @@ export default function Paiement() {
                     (s, o) => s + parseFloat(o.prix?.$numberDecimal || o.prix || 0), 0
                   );
                   const sousTotal = prixBillet + prixOptions;
-
                   return (
                     <div key={item.cartId} className="recap-article">
                       <button className="recap-article-toggle" onClick={() => toggleRecap(item.cartId)}>
@@ -305,7 +377,6 @@ export default function Paiement() {
                           {expandedRecap[item.cartId] ? <ChevronUp size={14} /> : <ChevronDown size={14} />}
                         </div>
                       </button>
-
                       {expandedRecap[item.cartId] && (
                         <div className="recap-article-detail">
                           <div className="recap-article-ligne">
@@ -324,16 +395,13 @@ export default function Paiement() {
                           </div>
                         </div>
                       )}
-
                       {idx < panier.length - 1 && <hr className="recap-article-sep" />}
                     </div>
                   );
                 })}
               </div>
             )}
-
             <hr className="recap-divider" />
-
             <div className="recap-ligne">
               <span>Sous-total TTC</span>
               <span className="recap-montant">{prixTTC.toFixed(2).replace(".", ",")}€</span>
@@ -344,24 +412,34 @@ export default function Paiement() {
                 <span className="recap-montant">-{reduction.toFixed(2).replace(".", ",")}€</span>
               </div>
             )}
-
             <hr className="recap-divider" />
-
             <div className="recap-ligne recap-ttc">
               <span>Total TTC</span>
               <span className="recap-montant recap-montant--ttc">
                 {totalFinal.toFixed(2).replace(".", ",")}€
               </span>
             </div>
-
-            <Button
-              text="Confirmer le paiement"
-              onClick={handleButtonPay}
-              style={{ width: "100%", marginBottom: "10px" }}
-            />
+           {paymentError && (
+            <p className="input-error" style={{ marginBottom: "10px", textAlign: "center" }}>
+              {paymentError}
+            </p>
+          )}
+          <Button
+            text="Confirmer le paiement"
+            onClick={handleButtonPay}
+            style={{ width: "100%", marginBottom: "10px" }}
+          />
           </aside>
         )}
       </div>
     </div>
+  );
+}
+
+export default function Paiement() {
+  return (
+    <Elements stripe={stripePromise}>
+      <PaiementForm />
+    </Elements>
   );
 }

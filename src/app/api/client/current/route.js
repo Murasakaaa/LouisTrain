@@ -25,7 +25,7 @@ export async function GET() {
       return NextResponse.json({ user: null }, { status: 404 });
     }
 
-   return NextResponse.json({
+    return NextResponse.json({
       user: {
         nom: client.nom,
         prenom: client.prenom,
@@ -55,22 +55,26 @@ export async function PATCH(req) {
       return NextResponse.json({ message: "Non authentifié" }, { status: 401 });
     }
 
-    const { reservations } = await req.json();
-    console.log("Reservations reçues :", JSON.stringify(reservations, null, 2));
-
-    if (!reservations || !Array.isArray(reservations)) {
-      return NextResponse.json({ message: "Données invalides" }, { status: 400 });
-    }
+    const { reservations, abonnement } = await req.json();
 
     await connectDB();
 
-    await Client.findByIdAndUpdate(payload.userId, {
-      $push: {
-        reservations: { $each: reservations },
-      },
-    });
+    if (reservations) {
+      if (!Array.isArray(reservations)) {
+        return NextResponse.json({ message: "Données invalides" }, { status: 400 });
+      }
+      await Client.findByIdAndUpdate(payload.userId, {
+        $push: { reservations: { $each: reservations } },
+      });
+    }
 
-    return NextResponse.json({ message: "Réservations ajoutées" }, { status: 200 });
+    if (abonnement) {
+      await Client.findByIdAndUpdate(payload.userId, {
+        $set: { abonnement },
+      });
+    }
+
+    return NextResponse.json({ message: "Mise à jour effectuée" }, { status: 200 });
 
   } catch (error) {
     console.error("Erreur PATCH /api/client/current :", error.message);
