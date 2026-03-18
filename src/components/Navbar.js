@@ -28,10 +28,11 @@ export default function Navbar({ isWhite, user }) {
   );
 
   const profil = userData && (
+    
     <div className="navbar-profil">
-      <p>
-        {userData.prenom} {userData.nom}
-      </p>
+      <a onClick={() => router.push("../historique")} style={{ cursor: "pointer" }}>
+        Mon historique
+      </a>
       <form action={logoutAction} style={{ display: "inline" }}>
         <button type="submit" className="logout">
           <LogOut />
@@ -45,6 +46,8 @@ export default function Navbar({ isWhite, user }) {
       router.replace("/");
     }
   };
+
+  
 
   return (
     <div className="navbar">

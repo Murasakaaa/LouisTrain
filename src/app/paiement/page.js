@@ -7,14 +7,7 @@ import Button from "../../components/commons/Button";
 import Input from "../../components/commons/Input";
 import { ChevronDown, ChevronUp } from "lucide-react";
 import { loadStripe } from "@stripe/stripe-js";
-import {
-  Elements,
-  CardNumberElement,
-  CardExpiryElement,
-  CardCvcElement,
-  useStripe,
-  useElements,
-} from "@stripe/react-stripe-js";
+import { Elements, CardNumberElement,CardExpiryElement, CardCvcElement, useStripe, useElements,} from "@stripe/react-stripe-js";
 
 const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY);
 
@@ -115,7 +108,7 @@ function PaiementForm() {
 
   const genererIdResa = () => {
     const uuid = crypto.randomUUID().replace(/-/g, "").slice(0, 10).toUpperCase();
-    return `RES-${uuid}`;
+    return uuid;
   };
 
   const handleButtonPay = async () => {
