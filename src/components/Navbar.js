@@ -3,12 +3,13 @@ import { useEffect, useState } from "react";
 import Button from "./commons/Button";
 import "../style/components/Navbar.css";
 import { useRouter, usePathname } from "next/navigation";
-import { LogOut } from "lucide-react";
+import { LogOut, ShoppingCart, TicketCheck } from "lucide-react";
 import { logout } from "../app/login/action";
 import { useActionState } from "react";
 
 export default function Navbar({ isWhite, user }) {
   const router = useRouter();
+  const pathname = usePathname();
 
   const [userData, setUserData] = useState(null);
   const [state, logoutAction] = useActionState(logout, undefined);
@@ -28,9 +29,9 @@ export default function Navbar({ isWhite, user }) {
   );
 
   const profil = userData && (
-    
+
     <div className="navbar-profil">
-      <a onClick={() => router.push("../historique")} style={{ cursor: "pointer" }}>
+      <a onClick={() => router.push("/historique")}>
         Mon historique
       </a>
       <form action={logoutAction} style={{ display: "inline" }}>
@@ -45,7 +46,7 @@ export default function Navbar({ isWhite, user }) {
     router.replace("/");
   };
 
-  
+
 
   return (
     <div className="navbar">
@@ -56,7 +57,20 @@ export default function Navbar({ isWhite, user }) {
       >
         Louis<span>Train</span>
       </h1>
-      {userData ? profil : buttonConnexion}
+      <div className="right_nav">
+        {!userData && pathname !== "/recupResa" && (
+          <div className="resaBtn" onClick={() => router.push("/recupResa")}>
+            <TicketCheck />
+          </div>
+        )}
+        {pathname !== "/panier" && (
+          <div className="cartBtn" onClick={() => router.push("/panier")}>
+            <ShoppingCart />
+          </div>
+        )}
+        {userData ? profil : buttonConnexion}
+      </div>
+
     </div>
   );
 }

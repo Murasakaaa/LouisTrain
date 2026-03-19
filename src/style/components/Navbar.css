@@ -42,3 +42,23 @@
   background-color: red;
   cursor: pointer;
 }
+
+.cartBtn, .resaBtn {
+  background-color: var(--white);
+  padding: 10px;
+  border-radius: 1em;
+  border: solid 1px var(--white);
+  color: var(--black);
+  font-weight: bold;
+  transition: all 1.1s linear;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+}
+
+.right_nav {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
