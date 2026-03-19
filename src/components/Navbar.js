@@ -42,9 +42,7 @@ export default function Navbar({ isWhite, user }) {
   );
 
   const handleBackHome = () => {
-    if (user && user.userId != "client_001") {
-      router.replace("/");
-    }
+    router.replace("/");
   };
 
   
@@ -53,7 +51,7 @@ export default function Navbar({ isWhite, user }) {
     <div className="navbar">
       <h1
         className="logo"
-        style={{ color: isWhite ? "var(--white)" : "var(--black)" }}
+        style={{ color: isWhite ? "var(--white)" : "var(--black)", userSelect: "none" }}
         onClick={handleBackHome}
       >
         Louis<span>Train</span>

@@ -2,7 +2,7 @@ import { cookies } from "next/headers";
 import { NextRequest, NextResponse } from "next/server";
 import { decrypt } from "./lib/session";
 
-const protectedRoutes = [""]; // mettre le chemin des pages dont on ne peut acceder sans être connecté
+const protectedRoutes = ["/historique"]; // mettre le chemin des pages dont on ne peut acceder sans être connecté
 const publicRoutes = ["/login"];
 const adminRoutes = ["/admin"];
 

@@ -27,12 +27,14 @@ export async function login(prevState: any, formData: FormData) {
 
   const { email: emailInput, password: passwordInput } = result.data;
 
+  let authRecord: IAuth | null = null;
+
   try {
     await connectDB();
 
     // on fetch le user dans la BDD
     // ------------------------------------------------------- remplacer client par auth ici
-    const authRecord = await Auth.findOne({ login: emailInput });
+    authRecord = await Auth.findOne({ login: emailInput });
 
     // console.log("authRecord trouvé :", authRecord);
     // console.log("passwordInput :", passwordInput);
@@ -61,13 +63,9 @@ export async function login(prevState: any, formData: FormData) {
     };
   }
 
-  // redirection (à changer en mettant la dernière page d'où le client vient , pour l'instant cest la page d'accueil)
-  if (emailInput === "dupont.jean@test.com") {
-    redirect("/admin");
-  } else {
-    const redirectTo = (formData.get("redirectTo") as string) || "/";
-    redirect(redirectTo);
-  }
+  // redirection
+  const redirectPath = authRecord.client_id === process.env.ADMIN_CLIENT_ID ? "/admin" : (formData.get("redirectTo") as string) || "/";
+  redirect(redirectPath);
 }
 
 // suppression de la session et redirection
