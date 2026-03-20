@@ -16,7 +16,7 @@ export default function HomePage() {
     const depart = formData.get("depart");
     const arrivee = formData.get("arrivee");
     const dateDepart = formData.get("date_depart");
-    
+
     // On ne récupère la date de retour que si la case est cochée
     const dateRetour = hasReturn ? formData.get("date_retour") : "";
 
@@ -67,10 +67,10 @@ export default function HomePage() {
 
               <div className="aller-retour-wrapper">
                 <div className="aller-retour">
-                  <Input 
-                    type="date" 
-                    name="date_depart" 
-                    darkInput={true} 
+                  <Input
+                    type="date"
+                    name="date_depart"
+                    darkInput={true}
                     style={{
                       width: hasReturn ? "50%" : "100%",
                       borderTopRightRadius: hasReturn ? "0" : "1em",
@@ -78,17 +78,17 @@ export default function HomePage() {
                       transition: "all 0.3s ease"
                     }}
                   />
-                  
+
                   {hasReturn && (
                     <div className="return-input-container">
                       <Input
                         type="date"
                         name="date_retour"
                         darkInput={true}
-                        style={{ 
-                          width: "100%", 
-                          borderTopLeftRadius: "0", 
-                          borderBottomLeftRadius: "0" 
+                        style={{
+                          width: "100%",
+                          borderTopLeftRadius: "0",
+                          borderBottomLeftRadius: "0"
                         }}
                       />
                     </div>

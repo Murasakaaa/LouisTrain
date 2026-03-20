@@ -72,8 +72,7 @@ export default function Calendar() {
         const apiParams = new URLSearchParams(searchParams.toString());
 
         const response = await fetch(
-          `/api/departs${
-            apiParams.toString() ? `?${apiParams.toString()}` : ""
+          `/api/departs${apiParams.toString() ? `?${apiParams.toString()}` : ""
           }`,
         );
 

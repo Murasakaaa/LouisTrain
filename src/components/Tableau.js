@@ -149,8 +149,8 @@ const PopUpRowDetails = ({ onClick, userData }) => {
                         <td>
                           {tripIndex === 0
                             ? new Date(row.date_reservation).toLocaleDateString(
-                                "fr-FR",
-                              )
+                              "fr-FR",
+                            )
                             : ""}
                         </td>
 

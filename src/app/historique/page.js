@@ -43,13 +43,13 @@ export default function Historique() {
 
     if (!reservation?.voyage?.length) return;
 
-    const doc    = new jsPDF({ orientation: "landscape", unit: "mm", format: "a5" });
-    const GREEN  = [28, 169, 77];
+    const doc = new jsPDF({ orientation: "landscape", unit: "mm", format: "a5" });
+    const GREEN = [28, 169, 77];
     const DGREEN = [20, 120, 55];
-    const BLACK  = [20, 20, 20];
-    const GREY   = [120, 120, 120];
-    const LGREY  = [230, 233, 235];
-    const WHITE  = [255, 255, 255];
+    const BLACK = [20, 20, 20];
+    const GREY = [120, 120, 120];
+    const LGREY = [230, 233, 235];
+    const WHITE = [255, 255, 255];
     const W = 210, H = 148, MID = 130;
 
     for (const [i, v] of reservation.voyage.entries()) {
@@ -175,11 +175,11 @@ export default function Historique() {
     const reservation = resa;
 
     const doc = new jsPDF();
-    const G  = [28, 169, 77];
+    const G = [28, 169, 77];
     const BK = [20, 20, 20];
     const GR = [110, 110, 110];
     const LG = [240, 242, 245];
-    const W  = [255, 255, 255];
+    const W = [255, 255, 255];
 
     doc.setFillColor(...G);
     doc.rect(0, 0, 210, 26, "F");
@@ -205,12 +205,12 @@ export default function Historique() {
     doc.setFillColor(...LG);
     doc.rect(14, 69, 182, 8, "F");
     doc.setFontSize(7); doc.setTextColor(...GR);
-    doc.text("Gare dep.",  C.dep + 1, 75);
-    doc.text("Gare arr.",  C.arr,     75);
-    doc.text("Date",       C.date,    75);
-    doc.text("Billet",     C.billet,  75);
-    doc.text("Options",    C.opt,     75);
-    doc.text("Total",      C.total,   75, { align: "right" });
+    doc.text("Gare dep.", C.dep + 1, 75);
+    doc.text("Gare arr.", C.arr, 75);
+    doc.text("Date", C.date, 75);
+    doc.text("Billet", C.billet, 75);
+    doc.text("Options", C.opt, 75);
+    doc.text("Total", C.total, 75, { align: "right" });
 
     let y = 83, totalGen = 0;
 

@@ -7,7 +7,7 @@ import Button from "../../components/commons/Button";
 import Input from "../../components/commons/Input";
 import { ChevronDown, ChevronUp } from "lucide-react";
 import { loadStripe } from "@stripe/stripe-js";
-import { Elements, CardNumberElement,CardExpiryElement, CardCvcElement, useStripe, useElements,} from "@stripe/react-stripe-js";
+import { Elements, CardNumberElement, CardExpiryElement, CardCvcElement, useStripe, useElements, } from "@stripe/react-stripe-js";
 
 const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY);
 
@@ -112,113 +112,113 @@ function PaiementForm() {
   };
 
   const handleButtonPay = async () => {
-  setPaymentError("");
-  const newErrors = validate();
-  if (Object.keys(newErrors).length > 0) {
-    setErrors(newErrors);
-    return;
-  }
-  if (!stripe || !elements) return;
-  try {
-    const departIds = panier.map((item) => item.departId).filter(Boolean);
-    if (departIds.length > 0) {
-      const placesRes = await fetch("/api/departs", {
-        method: "PATCH",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ departIds }),
+    setPaymentError("");
+    const newErrors = validate();
+    if (Object.keys(newErrors).length > 0) {
+      setErrors(newErrors);
+      return;
+    }
+    if (!stripe || !elements) return;
+    try {
+      const departIds = panier.map((item) => item.departId).filter(Boolean);
+      if (departIds.length > 0) {
+        const placesRes = await fetch("/api/departs", {
+          method: "PATCH",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ departIds }),
+        });
+        if (!placesRes.ok) {
+          const err = await placesRes.json();
+          setPaymentError(err.error || "Plus de places disponibles pour un des trajets.");
+          return;
+        }
+      }
+      const voyages = panier.map((item) => {
+        const optionsPropres = (item.selectedOptions || []).map((opt) => ({
+          nom: opt.nom,
+          prix: parseFloat(opt.prix?.$numberDecimal || opt.prix || 0),
+        }));
+        const prixOptions = optionsPropres.reduce((s, o) => s + o.prix, 0);
+        const prixBillet = parseFloat(item.prix);
+        return {
+          num_billet: item.cartId,
+          sens: item.sens || "aller",
+          depart_id: item.departId || "",
+          gare_depart: item.gareD,
+          gare_arrivee: item.gareA,
+          date: item.date,
+          heure_depart: item.heureD,
+          heure_arrivee: item.heureA,
+          options_choisies: optionsPropres,
+          prix_billet: prixBillet,
+          prix_options: prixOptions,
+          prix_ttc: prixBillet + prixOptions,
+        };
       });
-      if (!placesRes.ok) {
-        const err = await placesRes.json();
-        setPaymentError(err.error || "Plus de places disponibles pour un des trajets.");
+      const idResa = genererIdResa();
+      const { client_secret } = await fetch("/api/stripe", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ amount: totalFinal }),
+      }).then((r) => r.json());
+      const cardNumberElement = elements.getElement(CardNumberElement);
+      const result = await stripe.confirmCardPayment(client_secret, {
+        payment_method: {
+          card: cardNumberElement,
+          billing_details: {
+            name: `${form.prenom} ${form.nom}`,
+            email: form.email,
+          },
+        },
+      });
+      if (result.error) {
+        setPaymentError(result.error.message);
         return;
       }
-    }
-    const voyages = panier.map((item) => {
-      const optionsPropres = (item.selectedOptions || []).map((opt) => ({
-        nom: opt.nom,
-        prix: parseFloat(opt.prix?.$numberDecimal || opt.prix || 0),
-      }));
-      const prixOptions = optionsPropres.reduce((s, o) => s + o.prix, 0);
-      const prixBillet = parseFloat(item.prix);
-      return {
-        num_billet: item.cartId,
-        sens: item.sens || "aller",
-        depart_id: item.departId || "",
-        gare_depart: item.gareD,
-        gare_arrivee: item.gareA,
-        date: item.date,
-        heure_depart: item.heureD,
-        heure_arrivee: item.heureA,
-        options_choisies: optionsPropres,
-        prix_billet: prixBillet,
-        prix_options: prixOptions,
-        prix_ttc: prixBillet + prixOptions,
-      };
-    });
-    const idResa = genererIdResa();
-    const { client_secret } = await fetch("/api/stripe", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ amount: totalFinal }),
-    }).then((r) => r.json());
-    const cardNumberElement = elements.getElement(CardNumberElement);
-    const result = await stripe.confirmCardPayment(client_secret, {
-      payment_method: {
-        card: cardNumberElement,
-        billing_details: {
-          name: `${form.prenom} ${form.nom}`,
-          email: form.email,
+      const piDetails = await fetch(`/api/stripe?pi=${result.paymentIntent.id}`)
+        .then((r) => r.json());
+      const reservation = {
+        _id: idResa,
+        date_reservation: new Date().toISOString(),
+        statut: "confirmée",
+        reduction_appliquee: reduction,
+        prix_total: totalFinal,
+        voyage: voyages,
+        paiement: {
+          titulaire_cb: `${form.prenom} ${form.nom}`,
+          num_cb_masque: `****${piDetails.last4}`,
+          num_autorisation: result.paymentIntent.id,
+          date_expiration: `${piDetails.exp_month}/${piDetails.exp_year}`,
         },
-      },
-    });
-    if (result.error) {
-      setPaymentError(result.error.message);
-      return;
-    }
-    const piDetails = await fetch(`/api/stripe?pi=${result.paymentIntent.id}`)
-      .then((r) => r.json());
-    const reservation = {
-      _id: idResa,
-      date_reservation: new Date().toISOString(),
-      statut: "confirmée",
-      reduction_appliquee: reduction,
-      prix_total: totalFinal,
-      voyage: voyages,
-      paiement: {
-        titulaire_cb: `${form.prenom} ${form.nom}`,
-        num_cb_masque: `****${piDetails.last4}`,
-        num_autorisation: result.paymentIntent.id,
-        date_expiration: `${piDetails.exp_month}/${piDetails.exp_year}`,
-      },
-    };
-    const res = await fetch("/api/client/current", {
-      method: "PATCH",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ reservations: [reservation] }),
-    });
-    if (!res.ok) {
-      setPaymentError("Erreur lors de l'enregistrement de la réservation.");
-      return;
-    }
-    if (user?.abonnement?.code_reduction) {
-      await fetch("/api/client/current", {
+      };
+      const res = await fetch("/api/client/current", {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          abonnement: { ...user.abonnement, code_reduction: "" },
-        }),
+        body: JSON.stringify({ reservations: [reservation] }),
       });
+      if (!res.ok) {
+        setPaymentError("Erreur lors de l'enregistrement de la réservation.");
+        return;
+      }
+      if (user?.abonnement?.code_reduction) {
+        await fetch("/api/client/current", {
+          method: "PATCH",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            abonnement: { ...user.abonnement, code_reduction: "" },
+          }),
+        });
+      }
+      localStorage.setItem("id_resa", idResa);
+      localStorage.setItem("name", `${form.civilite} ${form.prenom} ${form.nom}`);
+      localStorage.setItem("mail", form.email);
+      localStorage.removeItem("panier");
+      router.push("/confirmation");
+    } catch (error) {
+      console.error("Erreur paiement :", error);
+      setPaymentError("Une erreur inattendue est survenue. Veuillez réessayer.");
     }
-    localStorage.setItem("id_resa", idResa);
-    localStorage.setItem("name", `${form.civilite} ${form.prenom} ${form.nom}`);
-    localStorage.setItem("mail", form.email);
-    localStorage.removeItem("panier");
-    router.push("/confirmation");
-  } catch (error) {
-    console.error("Erreur paiement :", error);
-    setPaymentError("Une erreur inattendue est survenue. Veuillez réessayer.");
-  }
-};
+  };
 
   return (
     <div className="paiement-container">
@@ -412,16 +412,16 @@ function PaiementForm() {
                 {totalFinal.toFixed(2).replace(".", ",")}€
               </span>
             </div>
-           {paymentError && (
-            <p className="input-error" style={{ marginBottom: "10px", textAlign: "center" }}>
-              {paymentError}
-            </p>
-          )}
-          <Button
-            text="Confirmer le paiement"
-            onClick={handleButtonPay}
-            style={{ width: "100%", marginBottom: "10px" }}
-          />
+            {paymentError && (
+              <p className="input-error" style={{ marginBottom: "10px", textAlign: "center" }}>
+                {paymentError}
+              </p>
+            )}
+            <Button
+              text="Confirmer le paiement"
+              onClick={handleButtonPay}
+              style={{ width: "100%", marginBottom: "10px" }}
+            />
           </aside>
         )}
       </div>
