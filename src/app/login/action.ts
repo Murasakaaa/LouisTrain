@@ -3,6 +3,7 @@
 import { z } from "zod";
 import { redirect } from "next/navigation";
 import { connectDB } from "../../lib/db";
+import bcrypt from "bcrypt";
 import Auth, { IAuth } from "../../models/Auth";
 import { createSession, deleteSession } from "../../lib/session";
 
@@ -33,7 +34,6 @@ export async function login(prevState: any, formData: FormData) {
     await connectDB();
 
     // on fetch le user dans la BDD
-    // ------------------------------------------------------- remplacer client par auth ici
     authRecord = await Auth.findOne({ login: emailInput });
 
     // console.log("authRecord trouvé :", authRecord);
@@ -46,12 +46,15 @@ export async function login(prevState: any, formData: FormData) {
     // comparaison entre le mdp de la BDD et le mdp dans l'input.
     // On vérifie l'existence ET le mot de passe en même temps.
     // Si l'un des deux échoue, on renvoie la même erreur générique.
-    if (!authRecord || passwordInput !== authRecord.pwd) {
+    const passwordMatch = authRecord
+      ? await bcrypt.compare(passwordInput, authRecord.pwd)
+      : false; // déchiffrement du mot de passe stocké en BDD et comparaison avec le mot de passe entré par l'utilisateur
+
+    if (!authRecord || !passwordMatch) {
       return {
         errors: { email: ["Identifiants incorrects."] },
       };
     }
-    // remplacer par un truc de chiffrement ici si le mdp est chiffré (avec Bcrypt)
 
     await createSession(authRecord.client_id); // appel de la fonction du fichier session.ts
   } catch (error) {
@@ -64,7 +67,10 @@ export async function login(prevState: any, formData: FormData) {
   }
 
   // redirection
-  const redirectPath = authRecord.client_id === process.env.ADMIN_CLIENT_ID ? "/admin" : (formData.get("redirectTo") as string) || "/";
+  const redirectPath =
+    authRecord.client_id === process.env.ADMIN_CLIENT_ID
+      ? "/admin"
+      : (formData.get("redirectTo") as string) || "/";
   redirect(redirectPath);
 }
 

@@ -31,10 +31,10 @@ export default function Navbar({ isWhite, user }) {
   const profil = userData && (
 
     <div className="navbar-profil">
-      <a onClick={() => router.push("/historique")}>
+      <a onClick={() => router.push("/historique")} style={{ cursor: "pointer" }}>
         Mon historique
       </a>
-      <form action={logoutAction} style={{ display: "inline" }}>
+      <form action={logoutAction} style={{ display: "inline", display: "flex", alignItems: "center" }}>
         <button type="submit" className="logout">
           <LogOut />
         </button>
