@@ -91,11 +91,6 @@ export default function PanierPage() {
     }, {});
   
     const handleValiderCommande = async () => {
-      const res = await fetch("/api/client/current");
-      if (!res.ok) {
-        router.push("/login?redirectTo=/paiement");
-        return;
-      }
       router.push("/paiement");
     };
   

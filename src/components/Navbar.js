@@ -46,8 +46,6 @@ export default function Navbar({ isWhite, user }) {
     router.replace("/");
   };
 
-
-
   return (
     <div className="navbar">
       <h1
