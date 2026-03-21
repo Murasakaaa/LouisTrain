@@ -312,7 +312,7 @@ export default function RecupResa() {
               <input
                 className="histo-form-input"
                 type="email"
-                placeholder="jean.dupont@email.com"
+                placeholder="example@email.com"
                 value={mail}
                 onChange={(e) => setMail(e.target.value)}
                 onKeyDown={(e) => e.key === "Enter" && handleRecherche()}
@@ -324,7 +324,7 @@ export default function RecupResa() {
               <input
                 className="histo-form-input"
                 type="text"
-                placeholder="Ex : RES-3590C7D437"
+                placeholder="Ex : 3590C7D437"
                 value={numResa}
                 onChange={(e) => setNumResa(e.target.value)}
                 onKeyDown={(e) => e.key === "Enter" && handleRecherche()}

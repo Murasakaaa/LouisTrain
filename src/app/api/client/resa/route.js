@@ -19,6 +19,7 @@ export async function POST(req) {
 
     if (client) {
       const reservation = client.reservations.find(r => r._id === numResa);
+      console.log("Correspondance trouvée :", { mail, numResa });
 
       return NextResponse.json({
         ok: true,
@@ -28,10 +29,11 @@ export async function POST(req) {
       });
     }
 
+    console.log("Aucune correspondance :", { mail, numResa });
     return NextResponse.json({ ok: true, found: false });
 
   } catch (error) {
-    console.error("Erreur POST /api/client/resa :", error);
+    console.error("Erreur POST /api/reservations/check :", error);
     return NextResponse.json({ ok: true, found: false });
   }
 }

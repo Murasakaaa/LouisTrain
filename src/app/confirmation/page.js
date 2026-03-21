@@ -12,24 +12,22 @@ export default function Confirmation() {
   const [reservation, setReservation] = useState(null);
 
   useEffect(() => {
-    const id = localStorage.getItem("id_resa") || "";
-    const n = localStorage.getItem("name") || "";
-    const m = localStorage.getItem("mail") || "";
-    setIdResa(id);
-    setName(n);
-    setMail(m);
-    if (id) {
-      fetch("/api/client/current")
-        .then((res) => res.ok ? res.json() : null)
-        .then((data) => {
-          if (data?.user?.reservations) {
-            const resa = data.user.reservations.find((r) => r._id === id);
-            setReservation(resa || null);
-          }
-        })
-        .catch(() => null);
-    }
-  }, []);
+  const id = localStorage.getItem("id_resa") || "";
+  const n = localStorage.getItem("name") || "";
+  const m = localStorage.getItem("mail") || "";
+  const r = localStorage.getItem("reservation");
+
+  if (!id || !r) {
+    router.push("/");
+    return;
+  }
+
+  setIdResa(id);
+  setName(n);
+  setMail(m);
+  setReservation(JSON.parse(r));
+}, []);
+
 
   const trunc = (str, max) =>
     (str || "").length > max ? str.substring(0, max - 1) + "..." : (str || "");

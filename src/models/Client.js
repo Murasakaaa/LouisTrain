@@ -35,6 +35,8 @@ const reservationSchema = new mongoose.Schema({
   prix_total: Number,
   voyage: [billetSchema],
   paiement: paiementSchema,
+  email_contact: String,
+
 });
 
 const clientSchema = new mongoose.Schema({
@@ -44,7 +46,7 @@ const clientSchema = new mongoose.Schema({
   prenom: String,
   telephone: String,
   email: { type: String, required: true },
-  date_creation: { type: String, default: "2023-01-01" },
+  date_creation: { type: String, default: "2026-03-21" },
   abonnement: {
     num_carte: String,
     code_reduction: String,

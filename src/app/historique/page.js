@@ -270,7 +270,6 @@ export default function Historique() {
     doc.save(`facture_${idResa}.pdf`);
   };
 
-  // ── RENDER ───────────────────────────────────────────────────────────────
   if (loading) {
     return (
       <div className="histo-container">

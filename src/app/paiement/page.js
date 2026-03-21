@@ -180,6 +180,7 @@ function PaiementForm() {
       const reservation = {
         _id: idResa,
         date_reservation: new Date().toISOString(),
+        email_contact: form.email, 
         statut: "confirmée",
         reduction_appliquee: reduction,
         prix_total: totalFinal,
@@ -191,14 +192,31 @@ function PaiementForm() {
           date_expiration: `${piDetails.exp_month}/${piDetails.exp_year}`,
         },
       };
-      const res = await fetch("/api/client/current", {
-        method: "PATCH",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ reservations: [reservation] }),
-      });
-      if (!res.ok) {
-        setPaymentError("Erreur lors de l'enregistrement de la réservation.");
-        return;
+      if (user) {
+        const res = await fetch("/api/client/current", {
+          method: "PATCH",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ reservations: [reservation] }),
+        });
+        if (!res.ok) {
+          setPaymentError("Erreur lors de l'enregistrement de la réservation.");
+          return;
+        }
+      } else {
+        const res = await fetch("/api/client/guest", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            nom: form.nom,
+            prenom: form.prenom,
+            email: form.email,
+            reservation,
+          }),
+        });
+        if (!res.ok) {
+          setPaymentError("Erreur lors de l'enregistrement de la réservation.");
+          return;
+        }
       }
       if (user?.abonnement?.code_reduction) {
         await fetch("/api/client/current", {
