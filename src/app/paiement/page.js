@@ -230,6 +230,7 @@ function PaiementForm() {
       localStorage.setItem("id_resa", idResa);
       localStorage.setItem("name", `${form.civilite} ${form.prenom} ${form.nom}`);
       localStorage.setItem("mail", form.email);
+      localStorage.setItem("reservation", JSON.stringify(reservation)); 
       localStorage.removeItem("panier");
       router.push("/confirmation");
     } catch (error) {
