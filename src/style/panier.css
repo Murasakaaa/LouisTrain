@@ -37,7 +37,15 @@
   display: grid;
   grid-template-columns: 1fr 340px;
   gap: 40px;
-  align-items: flex-start;
+}
+.panier-content--vide {
+  display: flex;
+  justify-content: center;
+}
+.panier-content--vide .panier-articles {
+  width: 100%;
+  align-items: center;
+  text-align: center;
 }
 
 /* ---- Colonne gauche ---- */
@@ -525,40 +533,6 @@
   color: var(--black);
 }
 
-/* ---- Modes de paiement — images ---- */
-.recap-paiement {
-  margin-bottom: 22px;
-}
-
-.recap-paiement-titre {
-  font-size: 0.82rem;
-  font-weight: 600;
-  color: var(--black);
-  margin: 0 0 12px;
-  text-align: center;
-}
-
-.recap-paiement-logos {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 12px;
-  flex-wrap: wrap;
-}
-
-.paiement-img {
-  height: 24px;
-  width: auto;
-  object-fit: contain;
-  filter: grayscale(10%);
-  transition: filter var(--transition), transform var(--transition);
-  border-radius: 4px;
-}
-
-.paiement-img:hover {
-  filter: grayscale(0%);
-  transform: scale(1.07);
-}
 
 /* ---- Bouton Ajouter ---- */
 .recap-ajouter-btn {

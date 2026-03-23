@@ -101,7 +101,7 @@ export default function PanierPage() {
   return (
     <div className="panier-page">
       <main className="panier-main">
-        <div className="panier-content">
+        <div className={`panier-content ${panier.length === 0 && isLoaded ? "panier-content--vide" : ""}`}>
 
           {/* ---- Colonne gauche ---- */}
           <div className="panier-articles">
@@ -297,28 +297,6 @@ export default function PanierPage() {
                 <span className="recap-montant recap-montant--ttc">
                   {prixTotal.toFixed(2).replace(".", ",")}€
                 </span>
-              </div>
-
-              {/* Modes de paiement */}
-              <div className="recap-paiement">
-                <p className="recap-paiement-titre">Modes de paiement acceptés</p>
-                <div className="recap-paiement-logos">
-                  <img
-                    src="/images/visa-logo.png"
-                    alt="Visa"
-                    className="paiement-img"
-                  />
-                  <img
-                    src="/images/mastercard-logo.png"
-                    alt="Mastercard"
-                    className="paiement-img"
-                  />
-                  <img
-                    src="/images/american-express-logo.png"
-                    alt="American Express"
-                    className="paiement-img"
-                  />
-                </div>
               </div>
 
               <Button

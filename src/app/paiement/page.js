@@ -417,6 +417,27 @@ function PaiementForm() {
               <span>Sous-total TTC</span>
               <span className="recap-montant">{prixTTC.toFixed(2).replace(".", ",")}€</span>
             </div>
+            {/* Modes de paiement */}
+            <div className="recap-paiement">
+              <p className="recap-paiement-titre">Modes de paiement acceptés</p>
+              <div className="recap-paiement-logos">
+                <img
+                  src="/images/visa-logo.png"
+                  alt="Visa"
+                  className="paiement-img"
+                />
+                <img
+                  src="/images/mastercard-logo.png"
+                  alt="Mastercard"
+                  className="paiement-img"
+                />
+                <img
+                  src="/images/american-express-logo.png"
+                  alt="American Express"
+                  className="paiement-img"
+                />
+              </div>
+            </div>
             {user?.abonnement && (
               <div className="recap-ligne reduction">
                 <span>Réduction adhérents</span>

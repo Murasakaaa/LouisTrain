@@ -334,3 +334,39 @@
   box-shadow: none;
   outline: none;
 }
+
+/* ---- Modes de paiement — images ---- */
+.recap-paiement {
+  margin-top: 5%;
+  margin-bottom: 22px;
+}
+
+.recap-paiement-titre {
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--black);
+  margin: 0 0 12px;
+  text-align: center;
+}
+
+.recap-paiement-logos {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.paiement-img {
+  height: 24px;
+  width: auto;
+  object-fit: contain;
+  filter: grayscale(10%);
+  transition: filter var(--transition), transform var(--transition);
+  border-radius: 4px;
+}
+
+.paiement-img:hover {
+  filter: grayscale(0%);
+  transform: scale(1.07);
+}
