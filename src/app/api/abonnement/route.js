@@ -7,7 +7,7 @@ export async function GET() {
 
   const clients = await Client.find({
     demande_abo: false,
-    "abonnement.num_carte": { $exists: true },
+    "abonnement.num_carte": { $ne: null },
   });
 
   return NextResponse.json(clients);

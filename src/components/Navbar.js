@@ -24,16 +24,19 @@ export default function Navbar({ isWhite, user }) {
       .catch(() => setUserData(null));
   }, [user]);
 
+  const isAdmin = user?.userId === process.env.NEXT_PUBLIC_ADMIN_CLIENT_ID;
+
   const buttonConnexion = (
     <Button text="Se connecter" onClick={() => router.replace("/login")} />
   );
 
   const profil = userData && (
-
     <div className="navbar-profil">
-      <a onClick={() => router.push("/historique")} style={{ cursor: "pointer" }}>
-        Mon historique
-      </a>
+      {!isAdmin && (
+        <a onClick={() => router.push("/historique")} style={{ cursor: "pointer" }}>
+          Mon historique
+        </a>
+      )}
       <form action={logoutAction} style={{ display: "inline", display: "flex", alignItems: "center" }}>
         <button type="submit" className="logout">
           <LogOut />
@@ -43,32 +46,37 @@ export default function Navbar({ isWhite, user }) {
   );
 
   const handleBackHome = () => {
-    router.replace("/");
+    if (!isAdmin) {
+      router.replace("/");
+    }
   };
 
   return (
     <div className="navbar">
       <h1
         className="logo"
-        style={{ color: isWhite ? "var(--white)" : "var(--black)", userSelect: "none" }}
+        style={{
+          color: isWhite ? "var(--white)" : "var(--black)",
+          userSelect: "none",
+          cursor: isAdmin ? "default" : "pointer",
+        }}
         onClick={handleBackHome}
       >
         Louis<span>Train</span>
       </h1>
       <div className="right_nav">
-        {!userData && pathname !== "/recupResa" && (
+        {!isAdmin && !userData && pathname !== "/recupResa" && (
           <div className="resaBtn" onClick={() => router.push("/recupResa")}>
             <TicketCheck />
           </div>
         )}
-        {pathname !== "/panier" && (
+        {!isAdmin && pathname !== "/panier" && (
           <div className="cartBtn" onClick={() => router.push("/panier")}>
             <ShoppingCart />
           </div>
         )}
         {userData ? profil : buttonConnexion}
       </div>
-
     </div>
   );
 }
