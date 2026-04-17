@@ -1,36 +1,148 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 🚂 LouisTrain
 
-## Getting Started
+Une plateforme moderne de réservation de trains construite avec **Next.js 16**, **React 19** et **TypeScript**. LouisTrain offre une expérience utilisateur fluide pour rechercher, réserver et payer des billets de train en ligne.
 
-First, run the development server:
+## 📋 Fonctionnalités
+
+### Pour les Utilisateurs
+- 🔐 **Authentification sécurisée** - Inscription, connexion et gestion des sessions
+- 🚆 **Recherche de trajets** - Consulter les départs disponibles et calendrier
+- 🛒 **Panier intelligent** - Ajouter/modifier/supprimer des réservations
+- 💳 **Paiement Stripe** - Traitement sécurisé des paiements en ligne
+- 📧 **Confirmation par email** - Confirmations de réservation et billets
+- 📄 **Génération de billets** - PDF avec code QR unique
+- 📊 **Historique** - Suivi complet des réservations passées
+- 🎟️ **Abonnements** - Programme d'abonnement pour clients réguliers
+- 🔄 **Récupération de réservations** - Retrouver une réservation existante
+
+### Pour les Administrateurs
+- 👨‍💼 **Tableau de bord admin** - Gestion globale de la plateforme
+- 📈 **Gestion des trajets** - Créer et modifier les départs disponibles
+- 👥 **Gestion des utilisateurs** - Suivi des clients et abonnements
+
+## 🛠️ Stack Technologique
+
+### Frontend
+- **Next.js 16** - Framework React moderne avec routing et API routes
+- **React 19** - Dernière version avec React Compiler
+- **TypeScript** - Pour plus de sécurité et meilleure DX
+- **CSS/Tailwind** - Styles personnalisés et responsive
+
+### Backend
+- **Node.js** - Serveur d'exécution
+- **MongoDB** - Base de données avec Mongoose ODM
+- **NextAuth** - Authentification et gestion des sessions
+
+### Services Externes
+- **Stripe** - Traitement des paiements sécurisé
+- **Nodemailer** - Envoi d'emails automatisés
+
+### Outils
+- **jsPDF** - Génération de PDF pour les billets
+- **QRCode** - Génération de codes QR
+- **Bcrypt** - Hashage sécurisé des mots de passe
+- **José** - Tokens JWT
+- **Lucide React** - Icônes SVG
+
+## 🚀 Installation & Lancement
+
+### Prérequis
+- Node.js 18+ 
+- npm/yarn/pnpm
+- MongoDB local ou distant
+- Clés Stripe (développement et production)
+- Configuration email (Nodemailer)
+
+### Installation
+
+```bash
+# Cloner le projet
+git clone [votre-repo]
+cd LouisTrain
+
+# Installer les dépendances
+npm install
+```
+
+### Configuration
+
+Créer un fichier `.env.local` à la racine du projet:
+
+```env
+# Base de données
+MONGODB_URI=mongodb+srv://[user]:[password]@[cluster].mongodb.net/louistrain
+
+# Authentification
+NEXTAUTH_SECRET=[votre-secret]
+NEXTAUTH_URL=http://localhost:3000
+
+# Stripe
+NEXT_PUBLIC_STRIPE_PUBLIC_KEY=[votre-clé-publique]
+STRIPE_SECRET_KEY=[votre-clé-secrète]
+
+# Email
+EMAIL_USER=[votre-email]
+EMAIL_PASSWORD=[votre-mot-de-passe]
+```
+
+### Développement
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+L'application sera disponible sur [http://localhost:3000](http://localhost:3000)
 
-You can start editing the page by modifying `app/page.js`. The page auto-updates as you edit the file.
+### Production
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```bash
+npm run build
+npm run start
+```
 
-## Learn More
+## 📁 Structure du Projet
 
-To learn more about Next.js, take a look at the following resources:
+```
+LouisTrain/
+├── src/
+│   ├── app/                    # Pages et layouts Next.js
+│   │   ├── api/               # Routes API backend
+│   │   ├── login/             # Page connexion
+│   │   ├── register/          # Page inscription
+│   │   ├── paiement/          # Page paiement
+│   │   ├── panier/            # Page panier
+│   │   ├── calendrier/        # Calendrier des trajets
+│   │   ├── historique/        # Historique réservations
+│   │   └── admin/             # Tableau de bord admin
+│   ├── components/            # Composants React réutilisables
+│   ├── models/                # Modèles Mongoose (Auth, Client, Depart)
+│   ├── lib/                   # Utilitaires (DB, mailer, session)
+│   └── style/                 # Feuilles de style CSS
+├── public/                    # Ressources statiques (fonts, images)
+└── package.json
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## 🔑 Points Clés
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+- **Sécurité** - Authentification JWT, hashage Bcrypt, validation Zod
+- **Performance** - React Compiler activé, optimisation des fonts
+- **Email** - Nodemailer pour confirmations et notifications
+- **Paiement** - Intégration complète Stripe avec webhooks
+- **Documents** - Génération de PDF et codes QR pour billets
 
-## Deploy on Vercel
+## 📝 Scripts Disponibles
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+```bash
+npm run dev      # Lancer le serveur de développement
+npm run build    # Construire pour la production
+npm run start    # Lancer le serveur de production
+npm run lint     # Vérifier la qualité du code
+```
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## 📄 Licence
+
+Propriétaire - Tous droits réservés
+
+---
+
+**LouisTrain** - Simplifier la réservation de trains 🚆
