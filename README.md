@@ -26,12 +26,11 @@ Une plateforme moderne de réservation de trains construite avec **Next.js 16**,
 - **Next.js 16** - Framework React moderne avec routing et API routes
 - **React 19** - Dernière version avec React Compiler
 - **TypeScript** - Pour plus de sécurité et meilleure DX
-- **CSS/Tailwind** - Styles personnalisés et responsive
+- **CSS** - Styles personnalisés
 
 ### Backend
 - **Node.js** - Serveur d'exécution
 - **MongoDB** - Base de données avec Mongoose ODM
-- **NextAuth** - Authentification et gestion des sessions
 
 ### Services Externes
 - **Stripe** - Traitement des paiements sécurisé
@@ -70,19 +69,16 @@ Créer un fichier `.env.local` à la racine du projet:
 
 ```env
 # Base de données
-MONGODB_URI=mongodb+srv://[user]:[password]@[cluster].mongodb.net/louistrain
+MONGODB_URI=mongodb+srv://[user]:[password]@[cluster].mongodb.net/[database]
 
-# Authentification
-NEXTAUTH_SECRET=[votre-secret]
-NEXTAUTH_URL=http://localhost:3000
+# Authentification personnalisée
+SESSION_SECRET=[votre-clé-session-secrète]
+ADMIN_CLIENT_ID=[votre-id-client-admin]
+NEXT_PUBLIC_ADMIN_CLIENT_ID=[votre-id-client-admin-public]
 
 # Stripe
-NEXT_PUBLIC_STRIPE_PUBLIC_KEY=[votre-clé-publique]
 STRIPE_SECRET_KEY=[votre-clé-secrète]
-
-# Email
-EMAIL_USER=[votre-email]
-EMAIL_PASSWORD=[votre-mot-de-passe]
+NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY=[votre-clé-publique]
 ```
 
 ### Développement
@@ -128,10 +124,10 @@ LouisTrain/
 - **Performance** - React Compiler activé, optimisation des fonts
 - **Email** - Nodemailer pour confirmations et notifications
 - **Paiement** - Intégration complète Stripe avec webhooks
-- **Documents** - Génération de PDF et codes QR pour billets
-
-## 📝 Scripts Disponibles
-
+- **Documents** -Hashage Bcrypt, tokens JWT, validation Zod
+- **Performance** - React Compiler activé, optimisation des fonts
+- **Email** - Nodemailer pour confirmations et notifications
+- **Paiement** - Intégration complète Stripe
 ```bash
 npm run dev      # Lancer le serveur de développement
 npm run build    # Construire pour la production
