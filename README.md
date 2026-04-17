@@ -134,11 +134,6 @@ npm run build    # Construire pour la production
 npm run start    # Lancer le serveur de production
 npm run lint     # Vérifier la qualité du code
 ```
-
-## 📄 Licence
-
-Propriétaire - Tous droits réservés
-
 ---
 
 **LouisTrain** - Simplifier la réservation de trains 🚆
